@@ -1,0 +1,26 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs et fichiers temporaires
+*.log
+*.cache
+*.tmp
+
+# Répertoires spécifiques à PHP
+/vendor/
+node_modules/
+composer.lock
+
+# Fichiers d'environnement
+.env
+.env.local
+.env.*.local
+
+# Fichiers IDE
+.idea/
+*.iml
+
+# Autres
+/public/storage
+/storage/*.key
