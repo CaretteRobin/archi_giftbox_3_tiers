@@ -47,18 +47,6 @@ It is a **console-based PHP application** that interacts with a MySQL database u
 
 ---
 
-## 📂 Project Structure
-
-gift.appli/
-├── src/
-│ ├── console/ # CLI scripts
-│ ├── models/ # Eloquent models
-│ └── conf/ # DB config (.ini)
-├── sql/ # Schema and test data
-└── vendor/ # Composer dependencies (ignored)
-
----
-
 ## 🧪 Running CLI Scripts
 
 php gift.appli/src/console/list_prestations_with_category.php
