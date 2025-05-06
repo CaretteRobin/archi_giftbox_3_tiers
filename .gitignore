@@ -9,6 +9,7 @@ Thumbs.db
 
 # Répertoires spécifiques à PHP
 /vendor/
+/gift.appli/src/vendor/
 node_modules/
 composer.lock
 
