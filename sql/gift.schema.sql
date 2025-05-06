@@ -9,7 +9,6 @@ CREATE DATABASE giftbox;
 
 USE giftbox;
 
-
 DROP TABLE IF EXISTS `box`;
 CREATE TABLE `box` (
   `id` varchar(128) NOT NULL,

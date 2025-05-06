@@ -16,6 +16,7 @@ composer.lock
 .env
 .env.local
 .env.*.local
+*.ini
 
 # Fichiers IDE
 .idea/
