@@ -49,10 +49,10 @@ It is a **console-based PHP application** that interacts with a MySQL database u
 
 ## 🧪 Running CLI Scripts
 
-php gift.appli/src/console/list_prestations_with_category.php
-php gift.appli/src/console/show_categorie_with_presta.php
-php gift.appli/src/console/list_coffret_types.php
-php gift.appli/src/console/list_coffrets_with_prestations.php
+- php gift.appli/src/console/list_prestations_with_category.php
+- php gift.appli/src/console/show_categorie_with_presta.php
+- php gift.appli/src/console/list_coffret_types.php
+- php gift.appli/src/console/list_coffrets_with_prestations.php
 
 ---
 
