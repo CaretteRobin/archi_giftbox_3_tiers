@@ -15,46 +15,56 @@ It is a **console-based PHP application** that interacts with a MySQL database u
 
 ---
 
-## 🚀 Features
+## 🚀 Installation and Project Startup
 
-### ✅ Implemented models (Eloquent)
+### Prerequisites
+- **PHP** (version 7.4 or higher)
+- **Composer** (PHP dependency manager)
+- **MySQL** (or another database compatible with Eloquent)
 
-- `Categorie`
-- `Prestation`
-- `CoffretType`
-- `Box` (structure prepared)
-- `Theme` (associated with CoffretType)
+### Installation Steps
 
-### ✅ Console scripts (CLI)
+1. **Clone the repository**  
+   Clone this project to your local machine:  
+   ```bash  
+   git clone https://github.com/vraiSlophil/giftbox.git  
+   cd giftbox  
+   ```
 
-#### Categories & Prestations
-- `show_categorie_with_presta.php`: displays a category (e.g., ID 3) with its prestations
-- `list_prestations_with_category.php`: lists all prestations with their associated categories
+2. **Install dependencies**  
+   Use Composer to install the required libraries:  
+   ```bash  
+   composer install  
+   ```
 
-#### Coffrets
-- `list_coffret_types.php`: displays all available coffret types
-- `list_coffrets_with_prestations.php`: shows each coffret type with its suggested prestations
+3. **Configure the database**
+    - Create a MySQL database.
+    - Update the `gift.appli/conf/conf.ini` file with your database connection details:  
+      ```ini  
+      [database]  
+      driver = mysql  
+      host = 127.0.0.1  
+      database = your_database_name  
+      username = your_username  
+      password = your_password  
+      charset = utf8mb4  
+      collation = utf8mb4_unicode_ci  
+      ```
 
----
+4. **Initialize Eloquent**  
+   Ensure the database is properly configured and the required tables are created.
 
-## 🧩 Technical Stack
+5. **Start the server**  
+   Launch the built-in PHP server with the following command:  
+   ```bash  
+   php -S localhost:8000 -t gift.appli/public/  
+   ```
 
-- 🐘 PHP 8+
-- ⚙️ Composer for dependency management
-- 💾 MySQL 8 (or MariaDB)
-- 🌐 Eloquent ORM (standalone, not full Laravel)
-- 🔁 PSR-4 Autoloading
+6. **Access the application**  
+   Open your browser and navigate to [http://localhost:8000](http://localhost:8000).
 
----
-
-## 🧪 Running CLI Scripts
-
-- php gift.appli/src/console/list_prestations_with_category.php
-- php gift.appli/src/console/show_categorie_with_presta.php
-- php gift.appli/src/console/list_coffret_types.php
-- php gift.appli/src/console/list_coffrets_with_prestations.php
-
----
+### 📄 Notes
+If you encounter errors, ensure all dependencies are installed and the database is correctly configured.
 
 ## 📄 Author & Acknowledgments
 
@@ -68,6 +78,6 @@ It is a **console-based PHP application** that interacts with a MySQL database u
 
 ## 📦 License
 
-This project is educational and not intended for production use. No license is applied by default.
+This project is for educational purposes and should not be used in production. No license is provided.
 
 ---
