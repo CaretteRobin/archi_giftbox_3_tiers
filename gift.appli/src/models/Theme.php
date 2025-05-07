@@ -20,4 +20,24 @@ class Theme extends Model
     {
         return $this->hasMany(CoffretType::class, 'theme_id');
     }
+
+    /**
+     * Méthode pour compter le nombre de coffrets dans ce thème
+     */
+    public function nombreCoffrets(): int
+    {
+        return $this->coffretTypes()->count();
+    }
+
+    /**
+     * Méthode pour obtenir toutes les prestations associées à ce thème
+     * (via les coffrets)
+     */
+    public function prestationsAssociees()
+    {
+        return Prestation::whereHas('coffretTypes', function($query) {
+            $query->whereIn('coffret_id', $this->coffretTypes()->pluck('id'));
+        })->get();
+    }
+
 }
