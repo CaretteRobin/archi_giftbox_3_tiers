@@ -26,4 +26,29 @@ class CoffretType extends Model
     {
         return $this->belongsToMany(Prestation::class, 'coffret2presta', 'coffret_id', 'presta_id');
     }
+
+    /**
+     * Méthode pour obtenir le nombre de prestations associées
+     */
+    public function nombrePrestations(): int
+    {
+        return $this->prestations()->count();
+    }
+
+    /**
+     * Méthode pour obtenir le prix estimé du coffret (somme des prestations)
+     */
+    public function prixEstime()
+    {
+        return $this->prestations()->sum('tarif');
+    }
+
+    /**
+     * Méthode pour vérifier si le coffret contient une prestation spécifique
+     */
+    public function contientPrestation($prestationId): bool
+    {
+        return $this->prestations()->where('id', $prestationId)->exists();
+    }
+
 }
