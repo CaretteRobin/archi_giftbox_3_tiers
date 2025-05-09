@@ -39,4 +39,23 @@ class CategorieController {
         $response->getBody()->write($html);
         return $response;
     }
+
+    /**
+     * Affiche les prestations d'une catégorie spécifique
+     */
+    public function getPrestationsByCategorie(Request $request, Response $response, array $args): Response
+    {
+        $categorieId = $args['id'];
+        $prestations = Prestation::where('categorie_id', $categorieId)->get();
+
+        $html = "<h1>Prestations de la catégorie $categorieId</h1><ul>";
+        foreach ($prestations as $prestation) {
+            $html .= "<li>{$prestation->libelle} - {$prestation->tarif} €</li>";
+        }
+        $html .= "</ul>";
+
+        $response->getBody()->write($html);
+        return $response;
+    }
+
 }
