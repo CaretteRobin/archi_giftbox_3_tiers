@@ -8,13 +8,13 @@ use Slim\App;
 
 return function (App $app): App {
     // Route 1 : Affichage des catégories
-    $app->get('/categories', [CategorieController::class, 'listCategories']);
+    $app->get('/categories[/]', [CategorieController::class, 'listCategories']);
 
     // Route 2 : Affichage d'une catégorie
-    $app->get('/categorie/{id}', [CategorieController::class, 'getCategorie']);
+    $app->get('/categorie/{id}[/]', [CategorieController::class, 'getCategorie']);
 
     // Route 3 : Affichage d'une prestation
-    $app->get('/prestation', [PrestationController::class, 'getPrestation']);
+    $app->get('/prestation[/]', [PrestationController::class, 'getPrestation']);
 
     // Route 4 : Page de test des routes
     $app->get('/', [TestController::class, 'testRoutes']);
