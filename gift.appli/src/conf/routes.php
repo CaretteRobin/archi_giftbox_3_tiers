@@ -19,5 +19,7 @@ return function (App $app): App {
     // Route 4 : Page de test des routes
     $app->get('/', [TestController::class, 'testRoutes']);
 
+    // Route 5 : Affichage des prestations d'une catégorie
+    $app->get('/categorie/{id}/prestations[/]', [CategorieController::class, 'getPrestationsByCategorie']);
     return $app;
 };
