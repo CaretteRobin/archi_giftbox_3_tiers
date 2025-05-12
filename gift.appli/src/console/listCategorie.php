@@ -13,7 +13,7 @@ use gift\appli\utils\Eloquent;
 use gift\appli\models\Categorie;
 
 // Initialisation de la connexion à la base de données
-Eloquent::init(__DIR__ . '/../conf/conf.ini');
+Eloquent::init(__DIR__ . '/../conf/gift.db.conf.ini');
 
 // Récupération de toutes les catégories
 $categories = Categorie::all();
