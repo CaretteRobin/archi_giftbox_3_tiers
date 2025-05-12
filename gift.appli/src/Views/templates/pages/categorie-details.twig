@@ -1,0 +1,49 @@
+{# src/Views/templates/pages/categorie-details.twig #}
+{% extends "layout.twig" %}
+
+{% block title %}Catégorie {{ categorie.libelle }} - Gift App{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-4">
+            <a href="{{ base_url() }}/categories" class="inline-flex items-center text-indigo-600 hover:text-indigo-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Retour aux catégories
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <h1 class="text-3xl font-bold mb-4 text-gray-800">{{ categorie.libelle }}</h1>
+
+            <div class="mb-6">
+                <p class="text-lg text-gray-600">{{ categorie.description }}</p>
+            </div>
+
+            <div class="border-t border-gray-200 pt-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-700">Prestations dans cette catégorie</h2>
+
+                {% if prestations|length > 0 %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for prestation in prestations %}
+                            <div class="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
+                                <h3 class="font-semibold text-gray-700">{{ prestation.libelle }}</h3>
+                                <p class="text-gray-600 mb-2">{{ prestation.description }}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-bold">{{ prestation.tarif }} €</span>
+                                    <a href="{{ base_url() }}/prestation?id={{ prestation.id }}"
+                                       class="text-sm text-indigo-600 hover:text-indigo-800">
+                                        Voir détails
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 italic">Aucune prestation disponible pour cette catégorie.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
