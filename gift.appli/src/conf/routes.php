@@ -33,5 +33,7 @@ return function (App $app): App {
         return $controller->testRoutes($request, $response);
     });
 
+    // Route 5 : Affichage des prestations d'une catégorie
+    $app->get('/categorie/{id}/prestations[/]', [CategorieController::class, 'getPrestationsByCategorie']);
     return $app;
 };
