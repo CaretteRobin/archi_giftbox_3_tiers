@@ -10,16 +10,12 @@ use Slim\Views\TwigMiddleware;
 use Twig\Extension\DebugExtension;
 use Twig\TwigFunction;
 
-session_start();
-
-// Initialisation de l'application Slim
-$app = AppFactory::create();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Initialisation de l'ORM
 Eloquent::init(__DIR__ . '/gift.db.conf.ini');
-
-// Chargement des routes
-(require_once __DIR__ . '/routes.php')($app);
 
 // Configuration de Twig avec des fonctions personnalisées
 $twig = Twig::create(__DIR__ . '/../Views/templates', [
@@ -27,15 +23,14 @@ $twig = Twig::create(__DIR__ . '/../Views/templates', [
     'debug' => true,
 ]);
 
-// Ajout de fonctions personnalisées à Twig
 $twig->addExtension(new DebugExtension());
 $twig->getEnvironment()->addFunction(new TwigFunction('base_url', function () {
-    // Obtenir l'URL de base (à adapter selon votre configuration)
     $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
     $basePath = ($scriptDir === '/') ? '' : $scriptDir;
     return $basePath;
 }));
 
+// Initialisation de l'application Slim
 $app = AppFactory::create();
 
 // Ajout du middleware TwigMiddleware
@@ -49,7 +44,6 @@ $errorMiddleware->setDefaultErrorHandler(function (
     $statusCode = 500;
     $message = "Une erreur s'est produite";
     $errorDetails = $exception->getTraceAsString();
-
 
     if ($exception instanceof HttpException) {
         $statusCode = $exception->getCode();
@@ -74,5 +68,7 @@ $errorMiddleware->setDefaultErrorHandler(function (
     );
 });
 
+// Chargement des routes
 $app = (require __DIR__ . '/routes.php')($app);
+
 return $app;

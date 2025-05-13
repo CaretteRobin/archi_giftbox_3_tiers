@@ -21,12 +21,26 @@ class CategorieController {
      * Affiche la liste des catégories
      */
     public function listCategories(Request $request, Response $response): Response {
+        $this->startSession();
+
+        $flash = $_SESSION['flash'] ?? null;
+        unset($_SESSION['flash']);
+
         $categories = Categorie::all();
 
         return $this->twig->render($response, 'pages/categories.twig', [
-            'categories' => $categories
+            'categories' => $categories,
+            'flash' => $flash, // 👈 passe le message à Twig
         ]);
     }
+
+    private function startSession(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
 
     /**
      * Affiche les détails d'une catégorie spécifique
