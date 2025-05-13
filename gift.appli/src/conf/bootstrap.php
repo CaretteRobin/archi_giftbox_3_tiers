@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use gift\appli\utils\Eloquent;
 use Slim\Views\Twig;
@@ -47,14 +48,16 @@ $errorMiddleware->setDefaultErrorHandler(function (
 ) use ($app, $twig) {
     $statusCode = 500;
     $message = "Une erreur s'est produite";
+    $errorDetails = $exception->getTraceAsString();
 
-    if ($exception instanceof \Slim\Exception\HttpException) {
+
+    if ($exception instanceof HttpException) {
         $statusCode = $exception->getCode();
         $message = $exception->getMessage();
     }
 
     // Pour les erreurs 404
-    if ($exception instanceof \Slim\Exception\HttpNotFoundException) {
+    if ($exception instanceof HttpNotFoundException) {
         $statusCode = 404;
         $message = "La page demandée n'existe pas";
     }
@@ -65,7 +68,8 @@ $errorMiddleware->setDefaultErrorHandler(function (
         'error.twig',
         [
             'code' => $statusCode,
-            'message' => $message
+            'message' => $message,
+            'errorDetails' => $errorDetails,
         ]
     );
 });

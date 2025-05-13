@@ -29,10 +29,10 @@
                         {% for prestation in prestations %}
                             <div class="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-colors">
                                 <h3 class="font-semibold text-gray-700">{{ prestation.libelle }}</h3>
-                                <p class="text-gray-600 mb-2">{{ prestation.description }}</p>
+                                <p class="text-gray-600 mb-2 line-clamp-2">{{ prestation.description }}</p>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-indigo-600 font-bold">{{ prestation.tarif }} €</span>
-                                    <a href="{{ base_url() }}/prestation?id={{ prestation.id }}"
+                                    <span class="text-indigo-600 font-bold">{{ prestation.tarif }} {{ prestation.unite|default('€') }}</span>
+                                    <a href="{{ base_url() }}/prestation/{{ prestation.id }}"
                                        class="text-sm text-indigo-600 hover:text-indigo-800">
                                         Voir détails
                                     </a>
@@ -44,6 +44,41 @@
                     <p class="text-gray-500 italic">Aucune prestation disponible pour cette catégorie.</p>
                 {% endif %}
             </div>
+
+            {% if stats %}
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-700">Statistiques</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="text-sm text-gray-500 mb-1">Nombre de prestations</h3>
+                            <p class="text-xl font-bold text-indigo-600">{{ stats.nombrePrestations }}</p>
+                        </div>
+
+                        {% if stats.prestationMoinsChere %}
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-sm text-gray-500 mb-1">Prix minimum</h3>
+                                <p class="text-xl font-bold text-indigo-600">{{ stats.prestationMoinsChere.tarif }} {{ stats.prestationMoinsChere.unite|default('€') }}</p>
+                                <p class="text-xs text-gray-500">{{ stats.prestationMoinsChere.libelle }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if stats.prestationPlusChere %}
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-sm text-gray-500 mb-1">Prix maximum</h3>
+                                <p class="text-xl font-bold text-indigo-600">{{ stats.prestationPlusChere.tarif }} {{ stats.prestationPlusChere.unite|default('€') }}</p>
+                                <p class="text-xs text-gray-500">{{ stats.prestationPlusChere.libelle }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if stats.prixMoyen %}
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h3 class="text-sm text-gray-500 mb-1">Prix moyen</h3>
+                                <p class="text-xl font-bold text-indigo-600">{{ stats.prixMoyen|number_format(2, ',', ' ') }} €</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
