@@ -10,6 +10,7 @@
                 <h1 class="text-8xl">{{ code }}</h1>
                 <div>{{ message }}</div>
             </div>
+            {% if errorDetails %}<pre class="text-sm text-gray-500">{{ errorDetails }}</pre>{% endif %}
             <div>
                 <a class="hover:underline" href="/">Retour à l'accueil</a>
             </div>
