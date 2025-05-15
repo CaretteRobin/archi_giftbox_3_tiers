@@ -10,25 +10,18 @@
     {% block styles %}{% endblock %}
 </head>
 <body class="bg-gray-100 min-h-screen">
-<header class="bg-gray-800 text-white shadow-md">
+<header class="bg-gray-800 text-white shadow-md mb-8">
     {% include 'partials/header.twig' %}
 </header>
-
-{% if flash %}
-    <div class="container mx-auto px-4 py-2 mt-4">
-        <div class="bg-blue-500 text-white p-4 rounded-md shadow-md">
-            {{ flash }}
-        </div>
-    </div>
-{% endif %}
 
 <main class="min-h-screen w-screen">
     {% block content %}{% endblock %}
 </main>
 
-<footer class="bg-gray-800 text-white">
+<footer class="bg-gray-800 text-white mt-8">
     {% include 'partials/footer.twig' %}
 </footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 {#<script src="{{ base_url() }}/assets/js/app.js"></script>#}

@@ -1,62 +1,52 @@
 <?php
 declare(strict_types=1);
 
-use gift\appli\Controllers\CategorieController;
-use gift\appli\Controllers\HomeController;
-use gift\appli\Controllers\PrestationController;
-use gift\appli\Controllers\TestController;
-use gift\appli\Controllers\AuthController;
 use Slim\App;
 
+use Gift\Application\Actions\ListCategoriesAction;
+use Gift\Application\Actions\GetCategorieAction;
+use Gift\Application\Actions\GetPrestationAction;
+use Gift\Application\Actions\TestRoutesAction;
+use Gift\Application\Actions\GetPrestationByIdAction;
+use Gift\Application\Actions\GetPrestationsByCategorieAction;
+use Gift\Application\Actions\HomeAction;
+use Gift\Application\Actions\Auth\ShowAuthPageAction;
+use Gift\Application\Actions\Auth\RegisterAction;
+use Gift\Application\Actions\Auth\SignInAction;
+use Gift\Application\Actions\Auth\LogoutAction;
+
 return function (App $app): App {
-    global $twig;
 
-    // Route 1 : Affichage des catégories
-    $app->get('/categories[/]', function ($request, $response) {
-        $controller = new CategorieController();
-        return $controller->listCategories($request, $response);
-    });
+    // Page d'accueil
+    $app->get('/', HomeAction::class)->setName('home');
 
-    // Route 2 : Affichage d'une catégorie
-    $app->get('/categorie/{id}[/]', function ($request, $response, $args) {
-        $controller = new CategorieController();
-        return $controller->getCategorie($request, $response, $args);
-    });
+    // Liste des catégories
+    $app->get('/categories[/]', ListCategoriesAction::class)->setName('list_categories');
 
-    // Route 3 : Affichage d'une prestation
-    $app->get('/prestation/{id}[/]', function ($request, $response, $args) {
-        $controller = new PrestationController();
-        return $controller->getPrestation($request, $response, $args);
-    });
+    // Détails d'une catégorie + ses prestations
+    $app->get('/categorie/{id}[/]', GetCategorieAction::class)->setName('get_categorie');
 
-    $app->get('/', [HomeController::class, 'home']);
+    // Prestations d'une catégorie
+    $app->get('/categorie/{id}/prestations[/]', GetPrestationsByCategorieAction::class)->setName('get_prestations_by_categorie');
 
-    // Route 4 : Page de test des routes
-//    $app->get('/', function ($request, $response) use ($twig) {
-//        $controller = new TestController($twig);
-//        return $controller->testRoutes($request, $response);
-//    });
+    // Détail d'une prestation (query param ou id direct selon design choisi)
+    $app->get('/prestation[/]', GetPrestationAction::class)->setName('get_prestation');
+    $app->get('/prestation/{id}[/]', GetPrestationByIdAction::class)->setName('get_prestation_by_id');
 
-    // Route 5 : Affichage des prestations d'une catégorie
-    $app->get('/categorie/{id}/prestations[/]', [CategorieController::class, 'getPrestationsByCategorie']);
+    // Page de test
+    $app->get('/test', TestRoutesAction::class)->setName('test_routes');
 
-    // Route 6 : Inscription
-    $app->post('/register', [AuthController::class, 'register']);
+    // Auth - Page de connexion
+    $app->get('/auth', ShowAuthPageAction::class)->setName('auth_page');
 
-    // Route 7 : Connexion
-    $app->post('/signin', [AuthController::class, 'signin']);
+    // Auth - Inscription
+    $app->post('/register', RegisterAction::class)->setName('register');
 
-    // Route 8 : Page d'authentification
-    $app->get('/auth', function ($request, $response) use ($twig) {
-        return $twig->render($response, 'pages/auth.twig');
-    });
+    // Auth - Connexion
+    $app->post('/signin', SignInAction::class)->setName('signin');
 
-    // Route 9 : Déconnexion
-    $app->get('/logout', [AuthController::class, 'logout']);
+    // Déconnexion
+    $app->get('/logout', LogoutAction::class)->setName('logout');
 
     return $app;
-
-
-
-
 };
