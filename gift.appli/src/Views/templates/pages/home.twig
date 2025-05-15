@@ -13,7 +13,7 @@
                     <a href="{{ base_url() }}/categories" class="px-6 py-3 bg-white text-indigo-800 rounded-lg font-semibold hover:bg-indigo-100 transition-colors">
                         Explorer le catalogue
                     </a>
-                    <a href="{{ base_url() }}/register" class="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-indigo-800 transition-colors">
+                    <a href="{{ base_url() }}/auth" class="px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-indigo-800 transition-colors">
                         Créer un compte
                     </a>
                 </div>
@@ -71,6 +71,12 @@
             </div>
         </section>
 
+        {% if flash %}
+            <div class="alert alert-success">
+                {{ flash }}
+            </div>
+        {% endif %}
+
         <!-- Avantages -->
         <section class="mb-20 h-[60vh] flex flex-col justify-center items-center">
             <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Pourquoi choisir MyGiftBox ?</h2>
@@ -111,3 +117,4 @@
         </section>
     </div>
 {% endblock %}
+

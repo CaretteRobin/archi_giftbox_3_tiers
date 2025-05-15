@@ -5,6 +5,7 @@ use gift\appli\Controllers\CategorieController;
 use gift\appli\Controllers\HomeController;
 use gift\appli\Controllers\PrestationController;
 use gift\appli\Controllers\TestController;
+use gift\appli\Controllers\AuthController;
 use Slim\App;
 
 return function (App $app): App {
@@ -38,5 +39,24 @@ return function (App $app): App {
 
     // Route 5 : Affichage des prestations d'une catégorie
     $app->get('/categorie/{id}/prestations[/]', [CategorieController::class, 'getPrestationsByCategorie']);
+
+    // Route 6 : Inscription
+    $app->post('/register', [AuthController::class, 'register']);
+
+    // Route 7 : Connexion
+    $app->post('/signin', [AuthController::class, 'signin']);
+
+    // Route 8 : Page d'authentification
+    $app->get('/auth', function ($request, $response) use ($twig) {
+        return $twig->render($response, 'pages/auth.twig');
+    });
+
+    // Route 9 : Déconnexion
+    $app->get('/logout', [AuthController::class, 'logout']);
+
     return $app;
+
+
+
+
 };

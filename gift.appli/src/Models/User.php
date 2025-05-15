@@ -13,13 +13,8 @@ class User extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-    protected $fillable = [
-        'email', 'password', 'role'
-    ];
-
-    protected $hidden = [
-        'password'
-    ];
+    protected $fillable = ['id', 'email', 'password', 'role'];
+    protected $hidden = ['password'];
 
     const ROLE_CLIENT = 1;
     const ROLE_ADMIN = 100;
