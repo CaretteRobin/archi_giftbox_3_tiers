@@ -7,7 +7,7 @@ namespace gift\appli\Controllers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use gift\appli\Models\User;
-use Ramsey\Uuid\Uuid; // ✅ Import nécessaire pour les UUIDs
+use Ramsey\Uuid\Uuid;
 
 class AuthController
 {
@@ -35,7 +35,7 @@ class AuthController
         }
 
         $user = new User();
-        $user->id = Uuid::uuid4()->toString(); // ✅ Génération de l'UUID
+        $user->id = Uuid::uuid4()->toString();
         $user->email = $data['email'];
         $user->password = password_hash($data['password'], PASSWORD_DEFAULT);
         $user->role = User::ROLE_CLIENT;
