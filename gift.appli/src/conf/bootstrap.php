@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use gift\appli\Middlewares\ErrorHandlerMiddleware;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
 use DI\Container;
@@ -53,40 +54,12 @@ $twig->getEnvironment()->addGlobal('nav_items', [
 
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
+$app->add(new ErrorHandlerMiddleware($twig));
+
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);
 
-// --- ERROR HANDLER ---
-$errorMiddleware = $app->addErrorMiddleware(true, true, true);
-$errorMiddleware->setDefaultErrorHandler(function (
-    $request,
-    $exception,
-    $displayErrorDetails,
-    $logErrors,
-    $logErrorDetails
-) use ($app, $twig) {
-    $statusCode = 500;
-    $message = "Une erreur s'est produite";
-    $errorDetails = $exception->getTraceAsString();
-
-    if ($exception instanceof \Slim\Exception\HttpException) {
-        $statusCode = $exception->getCode();
-        $message = $exception->getMessage();
-    }
-
-    if ($exception instanceof HttpNotFoundException) {
-        $statusCode = 404;
-        $message = "La page demandée n'existe pas";
-    }
-
-    $response = $app->getResponseFactory()->createResponse();
-    return $twig->render($response->withStatus($statusCode), 'error.twig', [
-        'code' => $statusCode,
-        'message' => $message,
-        'errorDetails' => $errorDetails,
-    ]);
-});
 
 // --- RETURN ---
 return $app;
