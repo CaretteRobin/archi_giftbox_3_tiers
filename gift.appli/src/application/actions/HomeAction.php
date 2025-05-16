@@ -2,7 +2,8 @@
 
 namespace gift\appli\application\actions;
 
-use gift\appli\Models\Categorie;
+
+use gift\appli\core\domain\entities\Categorie;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
