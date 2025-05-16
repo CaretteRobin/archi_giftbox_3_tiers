@@ -1,6 +1,6 @@
 <?php
 
-namespace gift\appli\Models;
+namespace gift\appli\core\domain\entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
