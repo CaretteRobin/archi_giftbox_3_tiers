@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace gift\appli\Application\Actions\Auth;
+namespace gift\appli\application\actions\auth;
 
-use gift\appli\Models\User;
+use gift\appli\core\domain\entities\User;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

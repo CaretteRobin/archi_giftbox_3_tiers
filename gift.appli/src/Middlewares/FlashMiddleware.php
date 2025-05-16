@@ -2,12 +2,13 @@
 
 namespace gift\appli\Middlewares;
 
+use gift\appli\core\domain\entities\User;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Slim\Views\Twig;
-use gift\appli\Models\User;
+
 
 class FlashMiddleware implements MiddlewareInterface
 {

@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace gift\appli\Application\Actions\Auth;
+namespace gift\appli\application\actions\auth;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class LogoutAction
+class LogOutAction
 {
     public function __invoke(Request $request, Response $response): Response
     {

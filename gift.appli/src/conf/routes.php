@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use gift\appli\application\actions\Auth\LogoutAction;
-use gift\appli\application\actions\Auth\RegisterAction;
-use gift\appli\application\actions\Auth\ShowAuthPageAction;
-use gift\appli\application\actions\Auth\SignInAction;
+use gift\appli\application\actions\auth\LogOutAction;
+use gift\appli\application\actions\auth\RegisterAction;
+use gift\appli\application\actions\auth\ShowAuthPageAction;
+use gift\appli\application\actions\auth\SignInAction;
 use gift\appli\application\actions\GetCategorieAction;
 use gift\appli\application\actions\GetPrestationAction;
 use gift\appli\application\actions\GetPrestationByIdAction;
@@ -53,7 +53,7 @@ return function (App $app): App {
     $app->group('', function (RouteCollectorProxy $group): void {
 
         // Déconnexion
-        $group->get('/logout', LogoutAction::class)->setName('logout');
+        $group->get('/logout', LogOutAction::class)->setName('logout');
 
         // Ajoutez ici toute route supplémentaire devant être protégée :
         // $group->post('/panier/valider', ValiderPanierAction::class)->setName('valider_panier');
