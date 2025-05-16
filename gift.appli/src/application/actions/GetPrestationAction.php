@@ -1,11 +1,11 @@
 <?php
 
-namespace Gift\Application\Actions;
+namespace gift\appli\application\actions;
 
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Gift\Core\Application\Usecases\CatalogueServiceInterface;
 use Gift\Core\Application\Usecases\Exceptions\EntityNotFoundException;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
 

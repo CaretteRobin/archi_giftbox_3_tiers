@@ -11,6 +11,5 @@ global $app;
 global $twig;
 
 $app->add(new FlashMiddleware($twig));
-$app->add(new AuthMiddleware());
 
 $app->run();

@@ -1,22 +1,20 @@
 <?php
 declare(strict_types=1);
 
+use gift\appli\application\actions\Auth\LogoutAction;
+use gift\appli\application\actions\Auth\RegisterAction;
+use gift\appli\application\actions\Auth\ShowAuthPageAction;
+use gift\appli\application\actions\Auth\SignInAction;
+use gift\appli\application\actions\GetCategorieAction;
+use gift\appli\application\actions\GetPrestationAction;
+use gift\appli\application\actions\GetPrestationByIdAction;
+use gift\appli\application\actions\GetPrestationsByCategorieAction;
+use gift\appli\application\actions\HomeAction;
+use gift\appli\application\actions\ListCategoriesAction;
+use gift\appli\application\actions\TestRoutesAction;
+use gift\appli\Middlewares\AuthMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
-use gift\appli\Middlewares\AuthMiddleware;
-
-use Gift\Application\Actions\HomeAction;
-use Gift\Application\Actions\ListCategoriesAction;
-use Gift\Application\Actions\GetCategorieAction;
-use Gift\Application\Actions\GetPrestationsByCategorieAction;
-use Gift\Application\Actions\GetPrestationAction;
-use Gift\Application\Actions\GetPrestationByIdAction;
-use Gift\Application\Actions\TestRoutesAction;
-
-use Gift\Application\Actions\Auth\ShowAuthPageAction;
-use Gift\Application\Actions\Auth\RegisterAction;
-use Gift\Application\Actions\Auth\SignInAction;
-use Gift\Application\Actions\Auth\LogoutAction;
 
 return function (App $app): App {
 
