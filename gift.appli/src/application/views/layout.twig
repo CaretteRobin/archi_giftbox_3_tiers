@@ -6,22 +6,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gift App{% endblock %}</title>
-    <link type="text/tailwindcss" href="{{ base_url() }}/assets/styles/main.css"/>
+    <link type="text/tailwindcss" href="{{ base_url() }}/styles/main.css"/>
     {% block styles %}{% endblock %}
 </head>
 <body class="bg-gray-100 min-h-screen">
-<header class="bg-gray-800 text-white shadow-md mb-8">
+<header class="bg-gray-800 text-white shadow-md">
     {% include 'partials/header.twig' %}
 </header>
+
+{% if flash %}
+    <div id="flash-message" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 9999; opacity: 0; transition: opacity 0.5s ease;">
+        {{ flash }}
+    </div>
+
+    <script>
+
+        (function() {
+
+            requestAnimationFrame(function() {
+                var flashMessage = document.getElementById('flash-message');
+
+                if (flashMessage) {
+
+                    setTimeout(function() {
+                        flashMessage.style.opacity = '1';
+                    }, 10);
+
+
+                    setTimeout(function() {
+                        flashMessage.style.opacity = '0';
+
+
+                        flashMessage.addEventListener('transitionend', function() {
+                            if (flashMessage.parentNode) {
+                                flashMessage.parentNode.removeChild(flashMessage);
+                            }
+                        });
+                    }, 5000);
+                }
+            });
+        })();
+    </script>
+{% endif %}
 
 <main class="min-h-screen w-screen">
     {% block content %}{% endblock %}
 </main>
 
-<footer class="bg-gray-800 text-white mt-8">
+<footer class="bg-gray-800 text-white">
     {% include 'partials/footer.twig' %}
 </footer>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 {#<script src="{{ base_url() }}/assets/js/app.js"></script>#}
