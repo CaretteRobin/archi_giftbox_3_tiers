@@ -24,19 +24,15 @@ return function (App $app): App {
     // Accueil
     $app->get('/', HomeAction::class)->setName('home');
 
-    // Catalogue des catégories
-    $app->get('/categories[/]', ListCategoriesAction::class)->setName('list_categories');
-
-    // Détail d'une catégorie + ses prestations
-    $app->get('/categorie/{id}[/]', GetCategorieAction::class)->setName('get_categorie');
-
-    // Prestations d’une catégorie
-    $app->get('/categorie/{id}/prestations[/]', GetPrestationsByCategorieAction::class)->setName('get_prestations_by_categorie');
-
-    // Détails d'une prestation
-    $app->get('/prestation[/]', GetPrestationAction::class)->setName('get_prestation');
-    $app->get('/prestation/{id}[/]', GetPrestationByIdAction::class)->setName('get_prestation_by_id');
-
+    $app->group('/categories', function (RouteCollectorProxy $cat) {
+        $cat->get('', ListCategoriesAction::class)->setName("list_categories");                   // GET /categories
+        $cat->get('/{id}', GetCategorieAction::class);               // GET /categories/{id}
+        $cat->get('/{id}/prestations', GetPrestationsByCategorieAction::class);
+    });
+    $app->group('/prestations', function (RouteCollectorProxy $pre) {
+        $pre->get('', GetPrestationAction::class);                   // GET /prestations
+        $pre->get('/{id}', GetPrestationByIdAction::class);          // GET /prestations/{id}
+    });
     // Page de test
     $app->get('/test', TestRoutesAction::class)->setName('test_routes');
 
