@@ -1,6 +1,6 @@
 <?php
 
-namespace gift\appli\Middlewares;
+namespace Gift\Appli\Middlewares;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/vendor/autoload.php';
-require_once __DIR__ . '/../src/conf/bootstrap.php';
 
-use gift\appli\Middlewares\FlashMiddleware;
+use Gift\Appli\Middlewares\FlashMiddleware;
+
+require_once __DIR__ . '/../src/vendor/autoload.php';
+require_once __DIR__ . '/../src/Conf/bootstrap.php';
 
 global $app;
 global $twig;
