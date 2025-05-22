@@ -1,8 +1,8 @@
 <?php
 
-namespace gift\appli\Middlewares;
+namespace Gift\Appli\Middlewares;
 
-use gift\appli\core\domain\entities\User;
+use Gift\Appli\Core\Domain\Entities\User;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\MiddlewareInterface;
