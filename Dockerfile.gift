@@ -1,0 +1,18 @@
+FROM php:8.2-apache
+
+# Install required system packages and PHP extensions
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    zip \
+    git \
+    && docker-php-ext-install pdo pdo_mysql \
+    && a2enmod rewrite
+
+# Install Composer globally
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    rm composer-setup.php
+
+# Enable Apache mod_rewrite (already done above, kept for clarity)
+RUN a2enmod rewrite
