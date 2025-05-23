@@ -15,23 +15,38 @@ services:
       - giftbox-db
 
   giftbox-db:
-    image: mariadb:11.2
+    image: bitnami/mariadb:11.4.6-debian-12-r0
+    depends_on:
+      - giftbox-db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: giftbox
-      MYSQL_USER: giftuser
-      MYSQL_PASSWORD: giftpass
+      - ALLOW_EMPTY_PASSWORD=no
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password}
+      - MARIADB_USER=${DB_USERNAME}
+      - MARIADB_PASSWORD=${DB_PASSWORD}
+      - MARIADB_DATABASE=${DB_DATABASE}
     ports:
       - "3307:3306"
     networks:
-      giftbox.net:
-        aliases:
-          - gift.db
+      - giftbox.net
 
   adminer:
     image: adminer
     ports:
       - "8083:8080"
+    networks:
+      - giftbox.net
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.2
+    depends_on:
+      - giftbox-db
+    environment:
+      PMA_HOST: giftbox-db           # Se connecte au service MariaDB
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+      # Optionnel : PMA_ABSOLUTE_URI, UPLOAD_LIMIT, etc.
+    ports:
+      - "8084:80"
     networks:
       - giftbox.net
 
