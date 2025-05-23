@@ -1,0 +1,40 @@
+services:
+  giftbox-php:
+    build:
+      context: .
+      dockerfile: Dockerfile.gift
+    ports:
+      - "8082:80"
+    volumes:
+      - ./gift.appli/public:/var/www/html
+      - ./gift.appli/src:/var/www/src
+    working_dir: /var/www/src
+    networks:
+      - giftbox.net
+    depends_on:
+      - giftbox-db
+
+  giftbox-db:
+    image: mariadb:11.2
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: giftbox
+      MYSQL_USER: giftuser
+      MYSQL_PASSWORD: giftpass
+    ports:
+      - "3307:3306"
+    networks:
+      giftbox.net:
+        aliases:
+          - gift.db
+
+  adminer:
+    image: adminer
+    ports:
+      - "8083:8080"
+    networks:
+      - giftbox.net
+
+networks:
+  giftbox.net:
+    driver: bridge
