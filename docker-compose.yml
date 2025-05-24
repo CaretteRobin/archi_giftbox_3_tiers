@@ -16,23 +16,26 @@ services:
 
   giftbox-db:
     image: bitnami/mariadb:11.4.6-debian-12-r0
-    depends_on:
-      - giftbox-db
     environment:
-      - ALLOW_EMPTY_PASSWORD=no
-      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-root_password}
-      - MARIADB_USER=${DB_USERNAME}
-      - MARIADB_PASSWORD=${DB_PASSWORD}
-      - MARIADB_DATABASE=${DB_DATABASE}
-    ports:
-      - "3307:3306"
+      ALLOW_EMPTY_PASSWORD: no
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
     networks:
       - giftbox.net
 
   adminer:
     image: adminer
+    depends_on:
+      - giftbox-db
+    environment:
+      ADMINER_DEFAULT_SERVER: giftbox-db
+      ADMINER_AUTOLOGIN: '1'
     ports:
       - "8083:8080"
+    volumes:
+      - ./adminer-theme.css:/var/www/html/adminer.css
     networks:
       - giftbox.net
 
@@ -41,10 +44,9 @@ services:
     depends_on:
       - giftbox-db
     environment:
-      PMA_HOST: giftbox-db           # Se connecte au service MariaDB
+      PMA_HOST: giftbox-db
       PMA_USER: ${DB_USERNAME}
       PMA_PASSWORD: ${DB_PASSWORD}
-      # Optionnel : PMA_ABSOLUTE_URI, UPLOAD_LIMIT, etc.
     ports:
       - "8084:80"
     networks:

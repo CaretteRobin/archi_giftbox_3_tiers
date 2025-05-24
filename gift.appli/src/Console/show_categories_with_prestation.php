@@ -4,7 +4,7 @@ namespace Gift\Appli\Console;
 use Gift\Appli\Core\Domain\Entities\Categorie;
 use Gift\Appli\Utils\Eloquent;
 
-Eloquent::init(__DIR__ . '../Conf/gift.db.conf.ini');
+Eloquent::getInstance();
 
 $categorie = Categorie::find(3);
 

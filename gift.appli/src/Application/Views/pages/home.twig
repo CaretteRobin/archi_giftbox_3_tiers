@@ -51,7 +51,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for categorie in categories %}
-                    <a href="{{ base_url() }}/categorie/{{ categorie.id }}" class="group">
+                    <a href="{{ base_url() }}/categories/{{ categorie.id }}" class="group">
                         <div class="bg-white rounded-lg shadow-md overflow-hidden h-64 relative">
                             <div class="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style="background-image: url('{{ base_url() }}/img/{{ categorie.libelle|lower }}.jpg');"></div>
                             <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
