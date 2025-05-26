@@ -3,52 +3,47 @@ declare(strict_types=1);
 
 namespace Gift\Appli\Utils;
 
-use Dotenv\Dotenv;
+use Dotenv\Dotenv;                       // <-- AJOUT
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
- * Gestionnaire Eloquent sous forme de singleton.
- *
- * – Charge automatiquement les variables d’environnement depuis le fichier .env placé à
- *   la racine du projet (une seule fois pour tout le cycle de vie du processus).
- * – Expose l’instance Capsule via Eloquent::getInstance().
+ * Singleton Eloquent.
+ * Charge automatiquement le fichier .env au premier appel.
  */
 final class Eloquent
 {
-    /** @var Capsule|null */
     private static ?Capsule $instance = null;
 
-    /**
-     * Retourne l’instance unique de Capsule. La connexion est
-     * initialisée au premier appel.
-     */
     public static function getInstance(): Capsule
     {
         if (self::$instance === null) {
             self::boot();
         }
-
         return self::$instance;
     }
 
-    /**
-     * Initialise Eloquent à partir des variables d’environnement.
-     * Appel interne déclenché une seule fois.
-     */
     private static function boot(): void
     {
-        // -----------------------------------------------------------------
+        // -------------------------------------------------------------
         // 1. Chargement des variables d’environnement (.env)
-        // -----------------------------------------------------------------
-        // On remonte de trois niveaux : Utils/ → src/ → <racine du dépôt>
-        $projectRoot = dirname(__DIR__, 3);
-        if (file_exists($projectRoot . '/.env')) {
-            Dotenv::createImmutable($projectRoot)->safeLoad();
+        // -------------------------------------------------------------
+        $rootCandidates = [
+            dirname(__DIR__),
+            dirname(__DIR__, 2),
+            dirname(__DIR__, 3),
+            dirname(__DIR__, 4),
+        ];
+
+        foreach ($rootCandidates as $root) {
+            if (file_exists($root . '/.env')) {
+                Dotenv::createImmutable($root)->safeLoad();
+                break;
+            }
         }
 
-        // -----------------------------------------------------------------
-        // 2. Création et configuration de l’instance Capsule
-        // -----------------------------------------------------------------
+        // -------------------------------------------------------------
+        // 2. Configuration de l’ORM
+        // -------------------------------------------------------------
         $capsule = new Capsule();
 
         $capsule->addConnection([
@@ -68,19 +63,8 @@ final class Eloquent
         self::$instance = $capsule;
     }
 
-    /**
-     * Empêche l’instanciation externe.
-     */
     private function __construct() {}
-
-    /**
-     * Empêche le clonage.
-     */
     private function __clone() {}
-
-    /**
-     * Empêche la restauration depuis une chaîne.
-     */
     public function __wakeup(): void
     {
         throw new \LogicException('Cannot unserialize singleton');

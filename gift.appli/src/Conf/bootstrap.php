@@ -23,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $container = new Container();
 
 // --- SERVICE INJECTION (métier) ---
-$container->set(CatalogueServiceInterface::class, fn() => new CatalogueService());
+$container->set(CatalogueServiceInterface::class, fn () => new CatalogueService());
 
 // --- APP ---
 AppFactory::setContainer($container);
@@ -39,7 +39,7 @@ $twig = Twig::create(__DIR__ . '/../Application/Views', [
 ]);
 
 $twig->addExtension(new DebugExtension());
-$twig->getEnvironment()->addFunction(new TwigFunction('base_url', function () {
+$twig->getEnvironment()->addFunction(new TwigFunction('base_url', static function () {
     $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
     return $scriptDir === '/' ? '' : $scriptDir;
 }));
@@ -52,7 +52,6 @@ $twig->getEnvironment()->addGlobal('flash', $_SESSION['flash'] ?? null);
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
 $app->add(new ErrorHandlerMiddleware($twig));
-
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);

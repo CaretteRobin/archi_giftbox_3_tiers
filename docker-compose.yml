@@ -8,6 +8,7 @@ services:
     volumes:
       - ./gift.appli/public:/var/www/html
       - ./gift.appli/src:/var/www/src
+      - ./.env:/var/www/src/.env
     working_dir: /var/www/src
     networks:
       - giftbox.net
@@ -17,7 +18,7 @@ services:
   giftbox-db:
     image: bitnami/mariadb:11.4.6-debian-12-r0
     environment:
-      ALLOW_EMPTY_PASSWORD: no
+      ALLOW_EMPTY_PASSWORD: 0
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
       MARIADB_USER: ${DB_USERNAME}
       MARIADB_PASSWORD: ${DB_PASSWORD}
