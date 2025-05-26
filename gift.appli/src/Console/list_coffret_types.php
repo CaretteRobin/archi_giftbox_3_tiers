@@ -5,7 +5,7 @@ namespace Gift\Appli\Console;
 use Gift\Appli\Core\Domain\Entities\CoffretType;
 use Gift\Appli\Utils\Eloquent;
 
-Eloquent::init(__DIR__ . '../Conf/gift.db.conf.ini');
+Eloquent::getInstance();
 
 $coffrets = CoffretType::all();
 

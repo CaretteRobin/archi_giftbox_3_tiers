@@ -7,7 +7,7 @@ use Gift\Appli\Core\Domain\Entities\Prestation;
 use Gift\Appli\Utils\Eloquent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-Eloquent::init(__DIR__ . '../Conf/gift.db.conf.ini');
+Eloquent::getInstance();
 
 $id = $argv[1] ?? '';
 try {

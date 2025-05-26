@@ -30,7 +30,7 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 
 // --- ORM INIT ---
-Eloquent::init(__DIR__ . '/gift.db.conf.ini');
+Eloquent::getInstance();
 
 // --- TWIG ---
 $twig = Twig::create(__DIR__ . '/../Application/Views', [
