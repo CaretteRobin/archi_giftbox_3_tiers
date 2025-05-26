@@ -12,7 +12,7 @@
             </div>
             {% if errorDetails %}<pre class="text-sm text-gray-500">{{ errorDetails }}</pre>{% endif %}
             <div>
-                <a class="hover:underline" href="/">Retour à l'accueil</a>
+                <a class="hover:underline" href="{{ url_for('home') }}">Retour à l'accueil</a>
             </div>
 {#        </div>#}
     </div>

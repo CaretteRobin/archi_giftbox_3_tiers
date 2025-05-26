@@ -7,64 +7,61 @@ use Gift\Appli\Core\Application\Usecases\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
 use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
 
-
-class CatalogueService implements CatalogueServiceInterface {
-
-    public function getCategories(): array {
+class CatalogueService implements CatalogueServiceInterface
+{
+    public function getCategories(): array
+    {
         try {
-            $rawCategories = Categorie::all(); // Eloquent
-            $result = [];
-            foreach ($rawCategories as $cat) {
-                $result[] = new Categorie(
-                    (int) $cat->id,
-                    $cat->libelle,
-                    $cat->description
-                );
-            }
-            return $result;
-        } catch (\Exception $e) {
-            throw new InternalErrorException("Erreur en récupérant les catégories.");
+            // On renvoie toutes les catégories sous forme de tableau « brut »
+            return Categorie::all()->toArray();
+        } catch (\Throwable $e) {
+            throw new InternalErrorException(
+                "Erreur lors de la récupération des catégories : " . $e->getMessage()
+            );
         }
     }
 
-    public function getCategorieById(int $id): array {
+    public function getCategorieById(int $id): array
+    {
         try {
-            $cat = Categorie::findOrFail($id);
-            return $cat->toArray();
+            return Categorie::findOrFail($id)->toArray();
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             throw new EntityNotFoundException("Catégorie $id non trouvée");
-        } catch (\Exception $e) {
-            throw new InternalErrorException("Erreur interne.");
+        } catch (\Throwable $e) {
+            throw new InternalErrorException("Erreur interne : " . $e->getMessage());
         }
     }
 
-    public function getPrestationById(string $id): array {
+    public function getPrestationById(string $id): array
+    {
         try {
-            $p = Prestation::findOrFail($id);
-            return $p->toArray();
+            return Prestation::findOrFail($id)->toArray();
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             throw new EntityNotFoundException("Prestation $id non trouvée");
-        } catch (\Exception $e) {
-            throw new InternalErrorException("Erreur interne.");
+        } catch (\Throwable $e) {
+            throw new InternalErrorException("Erreur interne : " . $e->getMessage());
         }
     }
 
-    public function getPrestationsbyCategorie(int $categ_id): array {
+    public function getPrestationsbyCategorie(int $categ_id): array
+    {
         try {
-            $p = Prestation::where('categorie_id', $categ_id)->get();
-            return $p->toArray();
-        } catch (\Exception $e) {
-            throw new InternalErrorException("Erreur interne.");
+            return Prestation::where('categorie_id', $categ_id)->get()->toArray();
+        } catch (\Throwable $e) {
+            throw new InternalErrorException("Erreur interne : " . $e->getMessage());
         }
     }
 
-    public function getThemesCoffrets(): array {
-        // TODO : à implémenter plus tard
+    /* … */
+    public function getThemesCoffrets(): array
+    {
+        // TODO: Implement getThemesCoffrets() method.
         return [];
     }
 
-    public function getCoffretById(int $id): array {
-        // TODO : à implémenter plus tard
+    public function getCoffretById(int $id): array
+    {
+        // TODO: Implement getCoffretById() method.
         return [];
     }
 }

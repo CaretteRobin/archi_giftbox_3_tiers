@@ -26,13 +26,14 @@ return function (App $app): App {
     $app->get('/', HomeAction::class)->setName('home');
 
     $app->group('/categories', function (RouteCollectorProxy $cat) {
-        $cat->get('', ListCategoriesAction::class)->setName("list_categories");                   // GET /categories
-        $cat->get('/{id}', GetCategorieAction::class);               // GET /categories/{id}
-        $cat->get('/{id}/prestations', GetPrestationsByCategorieAction::class);
+        $cat->get('', ListCategoriesAction::class)->setName('list_categories');
+        $cat->get('/{id}', GetCategorieAction::class)->setName('categorie_details');
+        $cat->get('/{id}/prestations', GetPrestationsByCategorieAction::class)->setName('categorie_prestations');
     });
+
     $app->group('/prestations', function (RouteCollectorProxy $pre) {
-        $pre->get('', GetPrestationAction::class);                   // GET /prestations
-        $pre->get('/{id}', GetPrestationByIdAction::class);          // GET /prestations/{id}
+        $pre->get('', GetPrestationAction::class)->setName('list_prestations');
+        $pre->get('/{id}', GetPrestationByIdAction::class)->setName('prestation_details');
     });
     // Page de test
     $app->get('/test', TestRoutesAction::class)->setName('test_routes');

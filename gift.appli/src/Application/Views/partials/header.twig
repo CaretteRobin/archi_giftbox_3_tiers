@@ -10,13 +10,13 @@
 
             {% if user %}
                 <li>
-                    <a href="{{ base_url() }}/logout" class="hover:text-gray-300">
+                    <a href="{{ url_for('logout') }}" class="hover:text-gray-300">
                         Déconnexion
                     </a>
                 </li>
             {% else %}
                 <li>
-                    <a href="{{ base_url() }}/auth" class="hover:text-gray-300">
+                    <a href="{{ url_for('auth_page') }}" class="hover:text-gray-300">
                         Connexion / Inscription
                     </a>
                 </li>
