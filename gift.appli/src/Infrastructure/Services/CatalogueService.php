@@ -46,7 +46,7 @@ class CatalogueService implements CatalogueServiceInterface
     public function getPrestationsbyCategorie(int $categ_id): array
     {
         try {
-            return Prestation::where('categorie_id', $categ_id)->get()->toArray();
+            return Prestation::where('cat_id', $categ_id)->get()->toArray();
         } catch (\Throwable $e) {
             throw new InternalErrorException("Erreur interne : " . $e->getMessage());
         }
