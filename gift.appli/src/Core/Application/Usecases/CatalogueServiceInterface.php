@@ -1,16 +1,17 @@
 <?php
+
 namespace Gift\Appli\Core\Application\Usecases;
 
 interface CatalogueServiceInterface {
     public function getCategories(): array;
 
-    public function getCategorieById(int $id): array;
+    public function getCategoryById(int $id): array;
 
     public function getPrestationById(string $id): array;
 
-    public function getPrestationsbyCategorie(int $categ_id): array;
+    public function getPrestationsByCategory(int $categoryId): array;
 
-    public function getThemesCoffrets(): array;
+    public function getThemesWithCoffrets(): array;
 
     public function getCoffretById(int $id): array;
 }
