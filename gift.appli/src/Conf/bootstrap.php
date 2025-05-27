@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Gift\Appli\Core\Application\Usecases\AuthServiceInterface;
 use Gift\Appli\Core\Application\Usecases\CatalogueServiceInterface;
+use Gift\Appli\Infrastructure\Services\AuthService;
 use Gift\Appli\Infrastructure\Services\CatalogueService;
 use Gift\Appli\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Utils\Eloquent;
@@ -57,5 +59,6 @@ $app->add(new ErrorHandlerMiddleware($twig));
 (require_once __DIR__ . '/routes.php')($app);
 
 
+$container->set(AuthServiceInterface::class, fn () => new AuthService());
 // --- RETURN ---
 return $app;
