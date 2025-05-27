@@ -37,9 +37,6 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (\Throwable $exception) {
-            /* --------------------------------------------------------
-             * Construction d’une réponse d’erreur personnalisée
-             * --------------------------------------------------------*/
             $statusCode   = 500;
             $publicMsg    = "Une erreur s'est produite";
 
