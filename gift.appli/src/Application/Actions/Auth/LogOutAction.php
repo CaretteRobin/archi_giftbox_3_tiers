@@ -3,30 +3,31 @@ declare(strict_types=1);
 
 namespace Gift\Appli\Application\Actions\Auth;
 
+use Gift\Appli\Core\Application\Usecases\AuthServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class LogOutAction
 {
-    public function __invoke(Request $request, Response $response): Response
+    private AuthServiceInterface $authService;
+
+    public function __construct(AuthServiceInterface $authService)
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        $this->logoutUser();
-        $this->setFlashMessage('Déconnexion réussie.');
-
-        return $this->redirect($response, '/');
+        $this->authService = $authService;
     }
 
-    private function logoutUser(): void
+    public function __invoke(Request $request, Response $response): Response
     {
-        unset($_SESSION['user']);
+        $this->authService->logout();
+        $this->setFlashMessage('Déconnexion réussie.');
+        return $this->redirect($response, '/');
     }
 
     private function setFlashMessage(string $message): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION['flash'] = $message;
     }
 

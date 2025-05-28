@@ -11,12 +11,12 @@ class ShowAuthPageAction
 {
     private Twig $twig;
 
-    public function __construct() {
-        global $twig;
+    public function __construct(Twig $twig)
+    {
         $this->twig = $twig;
     }
 
-    public function __invoke(Request $request, Response $response, array $args): Response
+    public function __invoke(Request $request, Response $response): Response
     {
         return $this->twig->render($response, 'pages/auth.twig');
     }

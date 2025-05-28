@@ -3,45 +3,42 @@ declare(strict_types=1);
 
 namespace Gift\Appli\Application\Actions\Auth;
 
-use Gift\Appli\Core\Domain\Entities\User;
+use Gift\Appli\Core\Application\Usecases\AuthServiceInterface;
+use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Ramsey\Uuid\Uuid;
 
 class RegisterAction
 {
+    private AuthServiceInterface $authService;
+
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function __invoke(Request $request, Response $response): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $data = $request->getParsedBody();
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
+        $email = $data['email'] ?? '';
+        $password = $data['password'] ?? '';
 
-        if (!$email || !$password) {
+        if (empty($email) || empty($password)) {
             $this->setFlashMessage('Email ou mot de passe manquant.');
             return $this->redirect($response, '/auth');
         }
 
-        if (User::where('email', $email)->exists()) {
+        if ($this->authService->isEmailTaken($email)) {
             $this->setFlashMessage('Cet email est déjà utilisé.');
             return $this->redirect($response, '/auth');
         }
 
         try {
-            $user = new User();
-            $user->id = Uuid::uuid4()->toString();
-            $user->email = $email;
-            $user->password = password_hash($password, PASSWORD_DEFAULT);
-            $user->role = User::ROLE_CLIENT;
-            $user->save();
-
-            $_SESSION['user'] = $user->id;
+            $userId = $this->authService->register($email, $password);
+            $_SESSION['user'] = $userId;
             $this->setFlashMessage('Inscription réussie ! Bienvenue.');
             return $this->redirect($response, '/');
-        } catch (\Exception $e) {
+        } catch (InternalErrorException|\Throwable $e) {
             $this->setFlashMessage('Une erreur est survenue lors de l’inscription.');
             return $this->redirect($response, '/auth');
         }
@@ -49,6 +46,9 @@ class RegisterAction
 
     private function setFlashMessage(string $message): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION['flash'] = $message;
     }
 
