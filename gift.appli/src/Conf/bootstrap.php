@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use Gift\Appli\Core\Application\Usecases\CatalogueServiceInterface;
-use Gift\Appli\Infrastructure\Services\CatalogueService;
-use Gift\Appli\Middlewares\ErrorHandlerMiddleware;
-use Gift\Appli\Utils\Eloquent;
-use Slim\Factory\AppFactory;
 use DI\Container;
+use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
+use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
+use Gift\Appli\Utils\Eloquent;
+use Gift\Appli\WebUI\Middlewares\FlashMiddleware;
+use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Twig\Extension\DebugExtension;
@@ -33,7 +34,7 @@ $app = AppFactory::create();
 Eloquent::getInstance();
 
 // --- TWIG ---
-$twig = Twig::create(__DIR__ . '/../Application/Views', [
+$twig = Twig::create(__DIR__ . '/../WebUI/Views', [
     'cache' => false,
     'debug' => true,
 ]);
@@ -55,6 +56,7 @@ $twig->getEnvironment()->addGlobal('flash', $_SESSION['flash'] ?? null);
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
 $app->add(new ErrorHandlerMiddleware($twig));
+$app->add(new FlashMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);
