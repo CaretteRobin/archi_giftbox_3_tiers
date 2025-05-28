@@ -3,41 +3,51 @@ declare(strict_types=1);
 
 namespace Gift\Appli\Application\Actions\Auth;
 
-use Gift\Appli\Core\Domain\Entities\User;
+use Gift\Appli\Core\Application\Usecases\AuthServiceInterface;
+use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
+use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class SignInAction
 {
+    private AuthServiceInterface $authService;
+
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     public function __invoke(Request $request, Response $response): Response
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $data = $request->getParsedBody();
-        $email = $data['email'] ?? null;
-        $password = $data['password'] ?? null;
+        $email = $data['email'] ?? '';
+        $password = $data['password'] ?? '';
 
-        if (!$email || !$password) {
+        if (empty($email) || empty($password)) {
             $this->setFlashMessage('Email ou mot de passe manquant.');
             return $this->redirect($response, '/auth');
         }
 
-        $user = User::where('email', $email)->first();
-
-        if (!$user || !password_verify($password, $user->password)) {
+        try {
+            $userId = $this->authService->login($email, $password);
+            $_SESSION['user'] = $userId;
+            $this->setFlashMessage('Connexion réussie.');
+            return $this->redirect($response, '/');
+        } catch (EntityNotFoundException) {
             $this->setFlashMessage('Identifiants incorrects.');
-            return $this->redirect($response, '/auth');
+        } catch (InternalErrorException|\Throwable $e) {
+            $this->setFlashMessage('Erreur lors de la connexion.');
         }
 
-        $_SESSION['user'] = $user->id;
-        $this->setFlashMessage('Connexion réussie.');
-        return $this->redirect($response, '/');
+        return $this->redirect($response, '/auth');
     }
 
     private function setFlashMessage(string $message): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION['flash'] = $message;
     }
 
