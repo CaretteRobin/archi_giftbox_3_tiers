@@ -44,6 +44,9 @@ $twig->getEnvironment()->addFunction(new TwigFunction('base_url', static functio
     return $scriptDir === '/' ? '' : $scriptDir;
 }));
 
+// --- TWIG INJECTION ---
+$container->set(Twig::class, fn () => $twig);
+
 // --- VARS GLOBALES TWIG ---
 $twig->getEnvironment()->addGlobal('asset_base', '/public');
 $twig->getEnvironment()->addGlobal('session', $_SESSION);
