@@ -2,18 +2,18 @@
 declare(strict_types=1);
 
 
-use Gift\Appli\Application\Actions\Auth\LogOutAction;
-use Gift\Appli\Application\Actions\Auth\RegisterAction;
-use Gift\Appli\Application\Actions\Auth\ShowAuthPageAction;
-use Gift\Appli\Application\Actions\Auth\SignInAction;
-use Gift\Appli\Application\Actions\GetCategorieAction;
-use Gift\Appli\Application\Actions\GetPrestationAction;
-use Gift\Appli\Application\Actions\GetPrestationByIdAction;
-use Gift\Appli\Application\Actions\GetPrestationsByCategorieAction;
-use Gift\Appli\Application\Actions\HomeAction;
-use Gift\Appli\Application\Actions\ListCategoriesAction;
-use Gift\Appli\Application\Actions\TestRoutesAction;
-use Gift\Appli\Middlewares\AuthMiddleware;
+use Gift\Appli\WebUI\Actions\Auth\LogOutAction;
+use Gift\Appli\WebUI\Actions\Auth\RegisterAction;
+use Gift\Appli\WebUI\Actions\Auth\ShowAuthPageAction;
+use Gift\Appli\WebUI\Actions\Auth\SignInAction;
+use Gift\Appli\WebUI\Actions\GetCategorieAction;
+use Gift\Appli\WebUI\Actions\GetPrestationAction;
+use Gift\Appli\WebUI\Actions\GetPrestationByIdAction;
+use Gift\Appli\WebUI\Actions\GetPrestationsByCategorieAction;
+use Gift\Appli\WebUI\Actions\HomeAction;
+use Gift\Appli\WebUI\Actions\ListCategoriesAction;
+use Gift\Appli\WebUI\Actions\TestRoutesAction;
+use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
