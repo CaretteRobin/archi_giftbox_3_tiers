@@ -1,0 +1,63 @@
+{# src/Views/templates/pages/boxes.twig #}
+{% extends "layout.twig" %}
+
+{% block title %}Mes Coffrets - Gift App{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Mes Coffrets</h1>
+            <a href="{{ url_for('box_create') }}" class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                Créer un nouveau coffret
+            </a>
+        </div>
+
+        {% if boxes is empty %}
+            <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                <p class="text-gray-600">Vous n'avez pas encore créé de coffrets.</p>
+                <a href="{{ url_for('box_create') }}" class="mt-4 inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                    Commencer un coffret
+                </a>
+            </div>
+        {% else %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for box in boxes %}
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <h2 class="text-xl font-semibold text-gray-700">{{ box.libelle }}</h2>
+                                <span class="px-3 py-1 bg-{{ box.statut == 1 ? 'green' : 'gray' }}-100 text-{{ box.statut == 1 ? 'green' : 'gray' }}-800 rounded-full text-sm">
+                                    {{ box.statut == 1 ? 'Actif' : 'Inactif' }}
+                                </span>
+                            </div>
+                            <p class="text-gray-600 mb-4">{{ box.description|slice(0, 100) }}{{ box.description|length > 100 ? '...' : '' }}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-lg font-bold text-indigo-600">{{ box.montant|number_format(2, ',', ' ') }} €</span>
+                                <a href="{{ url_for('box_details', {'id': box.id}) }}"
+                                   class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">
+                                    Détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if boxes|length > 9 %}
+                <div class="mt-8 flex justify-center">
+                    <nav aria-label="Pagination" class="inline-flex rounded-md shadow-sm">
+                        <a href="#" class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100">
+                            Précédent
+                        </a>
+                        <span class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border-t border-b border-gray-300">
+                            Page 1 sur {{ (boxes|length / 9)|round(0, 'ceil') }}
+                        </span>
+                        <a href="#" class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100">
+                            Suivant
+                        </a>
+                    </nav>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

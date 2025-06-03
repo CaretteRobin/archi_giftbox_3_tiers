@@ -213,4 +213,104 @@ class BoxService implements BoxServiceInterface
 
         return $box;
     }
+
+    /**
+     * Supprime une box
+     *
+     * @param string $boxId Identifiant de la box à supprimer
+     * @param string $userId Identifiant de l'utilisateur demandant la suppression
+     *
+     * @return bool Indique si la suppression a réussi
+     *
+     * @throws BoxException Si la box ne peut pas être supprimée ou si l'utilisateur n'est pas autorisé
+     */
+    public function deleteBox(string $boxId, string $userId): bool
+    {
+        // Récupération de la box
+        $box = Box::find($boxId);
+
+        if (!$box) {
+            throw new BoxException('Box introuvable', BoxException::INVALID_BOX);
+        }
+
+        // Vérification que l'utilisateur est le créateur de la box
+        if ($box->createur_id !== $userId) {
+            throw new BoxException('Vous n\'êtes pas autorisé à supprimer cette box', BoxException::UNAUTHORIZED_USER);
+        }
+
+        // Vérification du statut de la box
+        if ($box->statut !== Box::STATUT_CREE) {
+            throw new BoxException('Impossible de supprimer une box qui n\'est plus dans un état modifiable', BoxException::BOX_NOT_MODIFIABLE);
+        }
+
+        // Suppression des prestations associées
+        $box->prestations()->detach();
+
+        // Suppression de la box
+        if (!$box->delete()) {
+            throw new BoxException('Erreur lors de la suppression de la box', BoxException::INVALID_DATA);
+        }
+
+        return true;
+    }
+
+    /**
+     * Met à jour les informations d'une box
+     *
+     * @param string $boxId Identifiant de la box à mettre à jour
+     * @param string $userId Identifiant de l'utilisateur demandant la mise à jour
+     * @param array $data Données à mettre à jour
+     *
+     * @return Box La box mise à jour
+     *
+     * @throws BoxException Si la box ne peut pas être mise à jour ou si les données sont invalides
+     */
+    public function updateBox(string $boxId, string $userId, array $data): Box
+    {
+        // Récupération de la box
+        $box = Box::find($boxId);
+
+        if (!$box) {
+            throw new BoxException('Box introuvable', BoxException::INVALID_BOX);
+        }
+
+        // Vérification que l'utilisateur est le créateur de la box
+        if ($box->createur_id !== $userId) {
+            throw new BoxException('Vous n\'êtes pas autorisé à modifier cette box', BoxException::UNAUTHORIZED_USER);
+        }
+
+        // Vérification du statut de la box
+        if ($box->statut !== Box::STATUT_CREE) {
+            throw new BoxException('Impossible de modifier une box qui n\'est plus dans un état modifiable', BoxException::BOX_NOT_MODIFIABLE);
+        }
+
+        // Validation et mise à jour des données
+        if (isset($data['name']) && !empty($data['name'])) {
+            $box->libelle = $data['name'];
+        }
+
+        if (isset($data['description']) && !empty($data['description'])) {
+            $box->description = $data['description'];
+        }
+
+        if (isset($data['isGift']) && is_bool($data['isGift'])) {
+            $box->kdo = $data['isGift'] ? 1 : 0;
+        }
+
+        if (isset($data['giftMessage'])) {
+            if ($box->kdo && empty($data['giftMessage'])) {
+                throw new BoxException('Le message cadeau est obligatoire pour une box cadeau', BoxException::INVALID_DATA);
+            }
+            $box->message_kdo = $data['giftMessage'] ?? '';
+        }
+
+        $box->updated_at = Date::now();
+
+        // Sauvegarde des modifications
+        if (!$box->save()) {
+            throw new BoxException('Erreur lors de la mise à jour de la box', BoxException::INVALID_DATA);
+        }
+
+        return $box;
+    }
 }

@@ -39,7 +39,7 @@ class RegisterAction
         try {
             $userId = $this->authService->register($email, $password);
             $user = $this->userService->getUserById($userId);
-            $this->userService->storeUserInSession($user);
+            $this->userService->storeUser($user);
             $this->setFlashMessage('Inscription réussie ! Bienvenue.');
             return $this->redirect($response, '/');
         } catch (Throwable $e) {

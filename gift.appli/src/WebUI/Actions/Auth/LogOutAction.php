@@ -22,7 +22,7 @@ class LogOutAction
     public function __invoke(Request $request, Response $response): Response
     {
         $this->authService->logout();
-        $this->userService->removeUserFromSession();
+        $this->userService->removeUser();
         $this->setFlashMessage('Déconnexion réussie.');
         return $this->redirect($response, '/');
     }

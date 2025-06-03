@@ -35,7 +35,7 @@ class SignInAction
         try {
             $userId = $this->authService->login($email, $password);
             $user = $this->userService->getUserById($userId);
-            $this->userService->storeUserInSession($user);
+            $this->userService->storeUser($user);
             $this->setFlashMessage('Connexion réussie.');
             return $this->redirect($response, '/');
         } catch (EntityNotFoundException) {
