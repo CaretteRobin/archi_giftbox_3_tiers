@@ -19,6 +19,7 @@ use Gift\Appli\WebUI\Actions\ListCategoriesAction;
 use Gift\Appli\WebUI\Actions\TestRoutesAction;
 use Gift\Appli\WebUI\Actions\UpdateBoxAction;
 use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
+use Gift\Appli\WebUI\Actions\User\ProfilAction;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
@@ -78,6 +79,7 @@ return function (App $app): App {
                 $box->post('/delete', DeleteBoxAction::class)->setName('box_delete');
             });
         });
+        $group->get('/profil', ProfilAction::class)->setName('profil');
 
     })->add(AuthMiddleware::class);
 
