@@ -3,6 +3,7 @@
 namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -20,9 +21,14 @@ class HomeAction
 
     public function __invoke(Request $request, Response $response): Response
     {
+        $user = UserService::getUser();
+
         $categories = array_slice($this->catalogueService->getCategories(), 0, 3);
-        return $this->twig->render($response, 'pages/home.twig', [
-            'categories' => $categories
-        ]);
+
+        $params = ['categories' => $categories];
+        if ($user) {
+            $params['user'] = $user;
+        }
+        return $this->twig->render($response, 'pages/home.twig', $params);
     }
 }

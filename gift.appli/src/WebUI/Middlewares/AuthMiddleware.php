@@ -1,6 +1,7 @@
 <?php
 namespace Gift\Appli\WebUI\Middlewares;
 
+use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -16,8 +17,10 @@ class AuthMiddleware implements MiddlewareInterface
             session_start();
         }
 
+        $user = UserService::getUser();
+
         // Si l’utilisateur n’est pas connecté
-        if (! isset($_SESSION['user'])) {
+        if (!$user) {
             $_SESSION['flash'] = 'Vous devez être connecté pour accéder à cette page.';
 
             return (new Response())
@@ -25,7 +28,7 @@ class AuthMiddleware implements MiddlewareInterface
                 ->withStatus(302);
         }
 
-        // Tout est OK : on laisse la requête continuer
+
         return $handler->handle($request);
     }
 }
