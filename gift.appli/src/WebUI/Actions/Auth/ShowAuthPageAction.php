@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Gift\Appli\WebUI\Actions\Auth;
 
+use Gift\Appli\WebUI\Providers\CsrfTokenProvider;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -18,6 +19,10 @@ class ShowAuthPageAction
 
     public function __invoke(Request $request, Response $response): Response
     {
-        return $this->twig->render($response, 'pages/auth.twig');
+        $csrfToken = CsrfTokenProvider::generate();
+
+        return $this->twig->render($response, 'pages/auth.twig', [
+            'csrf_token' => $csrfToken
+        ]);
     }
 }
