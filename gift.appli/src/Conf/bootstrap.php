@@ -10,6 +10,9 @@ use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
+use Gift\Appli\Core\Application\Usecases\Services\AuthorizationService;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
 use Gift\Appli\Utils\Eloquent;
 use Gift\Appli\WebUI\Middlewares\FlashMiddleware;
 use Slim\Factory\AppFactory;
@@ -17,6 +20,10 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Twig\Extension\DebugExtension;
 use Twig\TwigFunction;
+use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction;
+use Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction;
 
 
 // --- SESSION ---
@@ -31,6 +38,14 @@ $container = new Container();
 $container->set(CatalogueServiceInterface::class, fn () => new CatalogueService());
 $container->set(AuthServiceInterface::class, fn () => new AuthService());
 $container->set(UserServiceInterface::class, fn () => new UserService());
+
+// --- AJOUT DU SERVICE D'AUTORISATION ---
+$container->set(AuthorizationServiceInterface::class, fn () => new AuthorizationService());
+$container->set(AuthorizationMiddleware::class, function (Container $container) {
+    return new AuthorizationMiddleware(
+        $container->get(AuthorizationServiceInterface::class)
+    );
+});
 
 // --- APP ---
 AppFactory::setContainer($container);
@@ -65,6 +80,32 @@ $app->add(new ErrorHandlerMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);
+
+
+// --- API ACTIONS ---
+$container->set(ListCategoriesApiAction::class, function (Container $container) {
+    return new ListCategoriesApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(ListPrestationsApiAction::class, function (Container $container) {
+    return new ListPrestationsApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(ListPrestationsByCategorieApiAction::class, function (Container $container) {
+    return new ListPrestationsByCategorieApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(GetCoffretApiAction::class, function (Container $container) {
+    return new GetCoffretApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
 
 
 // --- RETURN ---
