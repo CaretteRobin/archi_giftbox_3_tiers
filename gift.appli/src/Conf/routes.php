@@ -2,10 +2,13 @@
 declare(strict_types=1);
 
 
+use Gift\Appli\WebUI\Actions\GetBoxesAction;
+use Gift\Appli\WebUI\Actions\GetBoxesByIdAction;
 use Gift\Appli\WebUI\Actions\Auth\LogOutAction;
 use Gift\Appli\WebUI\Actions\Auth\RegisterAction;
 use Gift\Appli\WebUI\Actions\Auth\ShowAuthPageAction;
 use Gift\Appli\WebUI\Actions\Auth\SignInAction;
+use Gift\Appli\WebUI\Actions\CreateBoxAction;
 use Gift\Appli\WebUI\Actions\GetCategorieAction;
 use Gift\Appli\WebUI\Actions\GetPrestationAction;
 use Gift\Appli\WebUI\Actions\GetPrestationByIdAction;
@@ -35,6 +38,9 @@ return function (App $app): App {
         $pre->get('', GetPrestationAction::class)->setName('list_prestations');
         $pre->get('/{id}', GetPrestationByIdAction::class)->setName('prestation_details');
     });
+
+    $app->get('/gift/{id}', GetBoxesByIdAction::class)->setName('gift_details');
+
     // Page de test
     $app->get('/test', TestRoutesAction::class)->setName('test_routes');
 
@@ -53,9 +59,12 @@ return function (App $app): App {
         // Déconnexion
         $group->get('/logout', LogOutAction::class)->setName('logout');
 
-        // Ajoutez ici toute route supplémentaire devant être protégée :
-        // $group->post('/panier/valider', ValiderPanierAction::class)->setName('valider_panier');
-        // $group->get('/profil', ProfilAction::class)->setName('profil');
+        $group->group('/boxes', function (RouteCollectorProxy $pre) {
+            $pre->get('', GetBoxesAction::class)->setName('list_boxes');
+            $pre->get('/create', [CreateBoxAction::class, 'showForm'])->setName('box_create');
+            $pre->post('/create', [CreateBoxAction::class, 'handleForm'])->setName('box_create_submit');
+            $pre->get('/{id}', GetBoxesByIdAction::class)->setName('box_details');
+        });
 
     })->add(AuthMiddleware::class);
 

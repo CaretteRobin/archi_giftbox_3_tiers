@@ -1,0 +1,98 @@
+{# src/Views/templates/pages/box-details.twig #}
+{% extends "layout.twig" %}
+
+{% block title %}Détails du Coffret - {{ box.libelle }} - Gift App{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="mb-4">
+            <a href="{{ url_for('list_boxes') }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Retour à mes coffrets
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">{{ box.libelle }}</h1>
+                <span class="px-3 py-1 bg-{{ box.statut == 1 ? 'green' : 'gray' }}-100 text-{{ box.statut == 1 ? 'green' : 'gray' }}-800 rounded-full text-sm">
+                    {{ box.statut == 1 ? 'Actif' : 'Inactif' }}
+                </span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Informations du Coffret</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-gray-600 font-medium">Description</p>
+                            <p class="text-gray-800">{{ box.description ?: 'Aucune description' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 font-medium">Montant</p>
+                            <p class="text-indigo-600 font-bold text-xl">{{ box.montant|number_format(2, ',', ' ') }} €</p>
+                        </div>
+                        {% if box.kdo %}
+                            <div>
+                                <p class="text-gray-600 font-medium">Message Cadeau</p>
+                                <p class="text-gray-800 italic">{{ box.message_kdo ?: 'Aucun message' }}</p>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <p class="text-gray-600 font-medium">Date de création</p>
+                            <p class="text-gray-800">{{ box.created_at|date('d/m/Y à H:i') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Prestations du Coffret</h2>
+                    {% if box.prestations is empty %}
+                        <div class="bg-gray-100 rounded-lg p-4 text-center">
+                            <p class="text-gray-600">Aucune prestation ajoutée</p>
+                        </div>
+                    {% else %}
+                        <div class="space-y-4">
+                            {% for prestation in box.prestations %}
+                                <div class="bg-gray-100 rounded-lg p-4 flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-semibold text-gray-800">{{ prestation.libelle }}</h3>
+                                        <p class="text-gray-600 text-sm">{{ prestation.description|slice(0, 50) }}{{ prestation.description|length > 50 ? '...' : '' }}</p>
+                                    </div>
+                                    <span class="text-indigo-600 font-bold">{{ prestation.prix|number_format(2, ',', ' ') }} €</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end space-x-4">
+{#                <a href="{{ url_for('box_edit', {'id': box.id}) }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors">#}
+{#                    Modifier le coffret#}
+{#                </a>#}
+{#                <button id="delete-box" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">#}
+{#                    Supprimer le coffret#}
+{#                </button>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{#{% block scripts %}#}
+{#    <script>#}
+{#        document.getElementById('delete-box').addEventListener('click', function() {#}
+{#            if(confirm('Êtes-vous sûr de vouloir supprimer ce coffret ?')) {#}
+{#                fetch('{{ url_for('box_delete', {'id': box.id}) }}', {#}
+{#                    method: 'DELETE'#}
+{#                }).then(response => {#}
+{#                    if(response.ok) {#}
+{#                        window.location.href = '{{ url_for('list_boxes') }}';#}
+{#                    }#}
+{#                });#}
+{#            }#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}

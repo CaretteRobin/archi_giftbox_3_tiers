@@ -66,7 +66,7 @@ class UserService implements UserServiceInterface
 
     }
 
-    public function storeUserInSession(array $user): void
+    public static function storeUser(array $user): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -74,7 +74,7 @@ class UserService implements UserServiceInterface
         $_SESSION['user'] = $user;
     }
 
-    public function getUserFromSession(): ?array
+    public static function getUser(): ?array
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -82,7 +82,7 @@ class UserService implements UserServiceInterface
         return $_SESSION['user'] ?? null;
     }
 
-    public function removeUserFromSession(): void
+    public static function removeUser(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();

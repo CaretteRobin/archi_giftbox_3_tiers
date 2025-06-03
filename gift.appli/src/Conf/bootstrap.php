@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use DI\Container;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\AuthService;
+use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
@@ -25,6 +29,8 @@ $container = new Container();
 
 // --- SERVICE INJECTION (métier) ---
 $container->set(CatalogueServiceInterface::class, fn () => new CatalogueService());
+$container->set(AuthServiceInterface::class, fn () => new AuthService());
+$container->set(UserServiceInterface::class, fn () => new UserService());
 
 // --- APP ---
 AppFactory::setContainer($container);

@@ -6,11 +6,11 @@ interface UserServiceInterface
 {
 
     // Dans UserServiceInterface.php
-    public function storeUserInSession(array $user): void;
+    public static function storeUser(array $user): void;
 
-    public function getUserFromSession(): ?array;
+    public static function getUser(): ?array;
 
-    public function removeUserFromSession(): void;
+    public static function removeUser(): void;
 
     public function getUserById(string $userId): array;
 
