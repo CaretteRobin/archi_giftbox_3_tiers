@@ -1,11 +1,12 @@
 <?php
 
-namespace WebUI\Middlewares;
+namespace Gift\Appli\WebUI\Middlewares;
 
-use Core\Application\Services\Authorization\AuthorizationServiceInterface;
-use Core\Domain\Entities\User;
-use Core\Domain\Entities\Box;
-use WebUI\Exceptions\UnauthorizedException;
+
+use gift\app\WebUI\Exceptions\UnauthorizedException;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\Core\Domain\Entities\Box;
+use Gift\Appli\Core\Domain\Entities\User;
 
 class AuthorizationMiddleware
 {

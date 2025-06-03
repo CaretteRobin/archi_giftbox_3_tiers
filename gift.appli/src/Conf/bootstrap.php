@@ -7,14 +7,14 @@ use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\AuthService;
 use Gift\Appli\Core\Application\Usecases\Services\UserService;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
+use Gift\Appli\WebUI\Middlewares\CsrfMiddleware;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
 use Gift\Appli\Core\Application\Usecases\Services\AuthorizationService;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
-use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
 use Gift\Appli\Utils\Eloquent;
-use Gift\Appli\WebUI\Middlewares\FlashMiddleware;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -24,7 +24,6 @@ use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
 use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
 use Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction;
 use Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction;
-
 
 // --- SESSION ---
 if (session_status() === PHP_SESSION_NONE) {
@@ -77,6 +76,7 @@ $twig->getEnvironment()->addGlobal('flash', $_SESSION['flash'] ?? null);
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
 $app->add(new ErrorHandlerMiddleware($twig));
+$app->add(new CsrfMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);
