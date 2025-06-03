@@ -1,9 +1,10 @@
 <?php
 
-namespace Core\Application\Services\Authorization;
+namespace Gift\Appli\Core\Application\Usecases\Services;
 
-use Core\Domain\Entities\User;
-use Core\Domain\Entities\Box;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\Core\Domain\Entities\Box;
+use Gift\Appli\Core\Domain\Entities\User;
 
 class AuthorizationService implements AuthorizationServiceInterface
 {
