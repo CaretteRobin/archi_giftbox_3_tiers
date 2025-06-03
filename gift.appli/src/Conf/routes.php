@@ -14,6 +14,7 @@ use Gift\Appli\WebUI\Actions\HomeAction;
 use Gift\Appli\WebUI\Actions\ListCategoriesAction;
 use Gift\Appli\WebUI\Actions\TestRoutesAction;
 use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
+use Gift\Appli\WebUI\Actions\User\ProfilAction;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -56,6 +57,7 @@ return function (App $app): App {
         // Ajoutez ici toute route supplémentaire devant être protégée :
         // $group->post('/panier/valider', ValiderPanierAction::class)->setName('valider_panier');
         // $group->get('/profil', ProfilAction::class)->setName('profil');
+        $group->get('/profil', ProfilAction::class)->setName('profil');
 
     })->add(AuthMiddleware::class);
 
