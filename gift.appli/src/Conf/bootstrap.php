@@ -6,8 +6,8 @@ use DI\Container;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
-use Gift\Appli\Core\Application\Services\Authorization\AuthorizationService;
-use Gift\Appli\Core\Application\Services\Authorization\AuthorizationServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\AuthorizationService;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
 use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
 use Gift\Appli\Utils\Eloquent;
 use Gift\Appli\WebUI\Middlewares\FlashMiddleware;
@@ -16,6 +16,11 @@ use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Twig\Extension\DebugExtension;
 use Twig\TwigFunction;
+use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction;
+use Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction;
+
 
 // --- SESSION ---
 if (session_status() === PHP_SESSION_NONE) {
@@ -70,6 +75,32 @@ $app->add(new FlashMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);
+
+
+// --- API ACTIONS ---
+$container->set(ListCategoriesApiAction::class, function (Container $container) {
+    return new ListCategoriesApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(ListPrestationsApiAction::class, function (Container $container) {
+    return new ListPrestationsApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(ListPrestationsByCategorieApiAction::class, function (Container $container) {
+    return new ListPrestationsByCategorieApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
+
+$container->set(GetCoffretApiAction::class, function (Container $container) {
+    return new GetCoffretApiAction(
+        $container->get(CatalogueServiceInterface::class)
+    );
+});
 
 
 // --- RETURN ---
