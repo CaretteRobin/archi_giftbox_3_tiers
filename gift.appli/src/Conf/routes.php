@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 
+use Gift\Appli\WebUI\Actions\DeleteBoxAction;
 use Gift\Appli\WebUI\Actions\GetBoxesAction;
 use Gift\Appli\WebUI\Actions\GetBoxesByIdAction;
 use Gift\Appli\WebUI\Actions\Auth\LogOutAction;
@@ -16,6 +17,7 @@ use Gift\Appli\WebUI\Actions\GetPrestationsByCategorieAction;
 use Gift\Appli\WebUI\Actions\HomeAction;
 use Gift\Appli\WebUI\Actions\ListCategoriesAction;
 use Gift\Appli\WebUI\Actions\TestRoutesAction;
+use Gift\Appli\WebUI\Actions\UpdateBoxAction;
 use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
@@ -63,7 +65,12 @@ return function (App $app): App {
             $pre->get('', GetBoxesAction::class)->setName('list_boxes');
             $pre->get('/create', [CreateBoxAction::class, 'showForm'])->setName('box_create');
             $pre->post('/create', [CreateBoxAction::class, 'handleForm'])->setName('box_create_submit');
-            $pre->get('/{id}', GetBoxesByIdAction::class)->setName('box_details');
+            $pre->group('/{id}', function (RouteCollectorProxy $box) {
+                $box->get('', GetBoxesByIdAction::class)->setName('box_details');
+                $box->get('/edit', [UpdateBoxAction::class, 'showForm'])->setName('box_edit');
+                $box->patch('/edit', [UpdateBoxAction::class, 'handleForm'])->setName('box_edit_submit');
+                $box->post('/delete', DeleteBoxAction::class)->setName('box_delete');
+            });
         });
 
     })->add(AuthMiddleware::class);

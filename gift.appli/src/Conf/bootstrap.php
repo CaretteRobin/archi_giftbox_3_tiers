@@ -62,7 +62,6 @@ $twig->getEnvironment()->addGlobal('flash', $_SESSION['flash'] ?? null);
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
 $app->add(new ErrorHandlerMiddleware($twig));
-$app->add(new FlashMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);

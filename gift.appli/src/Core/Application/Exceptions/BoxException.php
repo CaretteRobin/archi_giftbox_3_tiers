@@ -14,4 +14,5 @@ class BoxException extends Exception
     const int INSUFFICIENT_PRESTATIONS = 30;
     const int UNAUTHORIZED_USER = 40;
     const int INVALID_DATA = 50;
+    const int DELETE_ERROR = 60;
 }
