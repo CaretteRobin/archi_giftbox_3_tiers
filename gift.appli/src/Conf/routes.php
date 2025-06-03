@@ -16,6 +16,12 @@ use Gift\Appli\WebUI\Actions\TestRoutesAction;
 use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
+use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
+use Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction;
+use Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction;
+
+
 
 return function (App $app): App {
 
@@ -53,11 +59,25 @@ return function (App $app): App {
         // Déconnexion
         $group->get('/logout', LogOutAction::class)->setName('logout');
 
-        // Ajoutez ici toute route supplémentaire devant être protégée :
-        // $group->post('/panier/valider', ValiderPanierAction::class)->setName('valider_panier');
-        // $group->get('/profil', ProfilAction::class)->setName('profil');
+
 
     })->add(AuthMiddleware::class);
+
+// API Routes
+    $app->group('/api', function (RouteCollectorProxy $api) {
+        // Liste des catégories
+        $api->get('/categories', \Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction::class);
+
+        // Liste des prestations
+        $api->get('/prestations', \Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction::class);
+
+        // Liste des prestations d'une catégorie
+        $api->get('/categories/{id}/prestations', \Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction::class);
+
+        // Détails d'un coffret
+        $api->get('/coffrets/{id}', \Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction::class);
+    });
+
 
     return $app;
 };
