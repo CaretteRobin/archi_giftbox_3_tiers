@@ -48,7 +48,7 @@ class SignInAction
             return $this->redirectWithFlash(
                 $response,
                 '/',
-                'Connexion réussieeeeeeeee.',
+                'Connexion réussie.',
                 'success'
             );
 
