@@ -2,11 +2,11 @@
 
 namespace Gift\Appli\Core\Application\Usecases\Services;
 
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthzServiceInterface;
 use Gift\Appli\Core\Domain\Entities\Box;
 use Gift\Appli\Core\Domain\Entities\User;
 
-class AuthorizationService implements AuthorizationServiceInterface
+class AuthzService implements AuthzServiceInterface
 {
     /**
      * Vérifie si l'utilisateur est autorisé à effectuer une opération

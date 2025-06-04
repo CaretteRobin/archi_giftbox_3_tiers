@@ -4,15 +4,15 @@ namespace Gift\Appli\WebUI\Middlewares;
 
 
 use gift\app\WebUI\Exceptions\UnauthorizedException;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthzServiceInterface;
 use Gift\Appli\Core\Domain\Entities\Box;
 use Gift\Appli\Core\Domain\Entities\User;
 
-class AuthorizationMiddleware
+class AuthzMiddleware
 {
-    private AuthorizationServiceInterface $authorizationService;
+    private AuthzServiceInterface $authorizationService;
 
-    public function __construct(AuthorizationServiceInterface $authorizationService)
+    public function __construct(AuthzServiceInterface $authorizationService)
     {
         $this->authorizationService = $authorizationService;
     }

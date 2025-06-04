@@ -2,8 +2,8 @@
 
 namespace Gift\Appli\WebUI\Actions;
 
-use Gift\Appli\Core\Application\Usecases\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
+use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpNotFoundException;
