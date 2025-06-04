@@ -4,59 +4,61 @@ declare(strict_types=1);
 namespace Gift\Appli\WebUI\Actions\Auth;
 
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
-use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
-use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
+use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
+use Gift\Appli\WebUI\Providers\UserProvider;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class SignInAction
 {
-    private AuthServiceInterface $authService;
-    private UserServiceInterface $userService;
+    use FlashRedirectTrait;
 
-    public function __construct(AuthServiceInterface $authService, UserServiceInterface $userService)
-    {
-        $this->authService = $authService;
-        $this->userService = $userService;
+    private AuthServiceInterface $authService;
+    private UserProvider $userProvider;
+
+    public function __construct(
+        AuthServiceInterface $authService,
+        UserProvider $userProvider
+    ) {
+        $this->authService  = $authService;
+        $this->userProvider = $userProvider;
     }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
-
-        if (empty($email) || empty($password)) {
-            $this->setFlashMessage('Email ou mot de passe manquant.');
-            return $this->redirect($response, '/auth');
-        }
-
         try {
-            $userId = $this->authService->login($email, $password);
-            $user = $this->userService->getUserById($userId);
-            $this->userService->storeUser($user);
-            $this->setFlashMessage('Connexion réussie.');
-            return $this->redirect($response, '/');
+            $data = $request->getParsedBody();
+            $email = $data['email'] ?? '';
+            $password = $data['password'] ?? '';
+
+            if (empty($email) || empty($password)) {
+                return $this->redirectWithFlash(
+                    $response,
+                    '/auth',
+                    'Email ou mot de passe manquant.',
+                    'error'
+                );
+            }
+
+            // On récupère directement l'utilisateur complet
+            $user = $this->authService->login($email, $password);
+            $this->userProvider->store($user);
+
+            return $this->redirectWithFlash(
+                $response,
+                '/',
+                'Connexion réussieeeeeeeee.',
+                'success'
+            );
+
         } catch (EntityNotFoundException) {
-            $this->setFlashMessage('Identifiants incorrects.');
-        } catch (InternalErrorException|\Throwable $e) {
-            $this->setFlashMessage('Erreur lors de la connexion.');
+            return $this->redirectWithFlash(
+                $response,
+                '/auth',
+                'Identifiants incorrects.',
+                'error'
+            );
         }
-
-        return $this->redirect($response, '/auth');
-    }
-
-    private function setFlashMessage(string $message): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        $_SESSION['flash'] = $message;
-    }
-
-    private function redirect(Response $response, string $url): Response
-    {
-        return $response->withHeader('Location', $url)->withStatus(302);
     }
 }

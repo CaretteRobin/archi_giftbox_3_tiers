@@ -13,35 +13,33 @@
     {% include 'partials/header.twig' %}
 </header>
 
-{% if flash %}
-    <div id="flash-message" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 9999; opacity: 0; transition: opacity 0.5s ease;">
-        {{ flash }}
+{% if flash.message is defined and flash.message is not empty %}
+    <div id="flash-message" class="fixed top-5 left-1/2 transform -translate-x-1/2 p-4 rounded-lg shadow-lg z-50 opacity-0 transition-opacity duration-500
+        {% if flash.type == 'error' %}bg-red-500{%
+        elseif flash.type == 'success' %}bg-green-500{%
+        else %}bg-blue-500{% endif %} text-white">
+        {{ flash.message }}
     </div>
 
     <script>
         (function() {
-            requestAnimationFrame(function() {
-                var flashMessage = document.getElementById('flash-message');
+            const flashMessage = document.getElementById('flash-message');
+            if (flashMessage) {
+                // Afficher le message
+                setTimeout(() => flashMessage.style.opacity = '1', 100);
 
-                if (flashMessage) {
-                    setTimeout(function() {
-                        flashMessage.style.opacity = '1';
-                    }, 10);
-
-                    setTimeout(function() {
-                        flashMessage.style.opacity = '0';
-
-                        flashMessage.addEventListener('transitionend', function() {
-                            if (flashMessage.parentNode) {
-                                flashMessage.parentNode.removeChild(flashMessage);
-                            }
-                        });
-                    }, 5000);
-                }
-            });
+                // Cacher et supprimer après 5 secondes
+                setTimeout(() => {
+                    flashMessage.style.opacity = '0';
+                    flashMessage.addEventListener('transitionend', () => {
+                        flashMessage.remove();
+                    });
+                }, 5000);
+            }
         })();
     </script>
 {% endif %}
+
 
 <main class="min-h-screen w-screen">
     {% block content %}{% endblock %}

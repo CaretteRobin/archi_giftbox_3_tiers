@@ -6,7 +6,7 @@ namespace Gift\Appli\WebUI\Actions;
 use Gift\Appli\Core\Application\Exceptions\BoxException;
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
 use Gift\Appli\Core\Application\Usecases\Services\BoxService;
-use Gift\Appli\Core\Application\Usecases\Services\UserService;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -16,18 +16,21 @@ class UpdateBoxAction
 {
     private Twig $twig;
     private BoxService $boxService;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(Twig $twig, BoxService $boxService)
+    public function __construct(Twig $twig, BoxService $boxService, UserProviderInterface $userProvider)
     {
         $this->twig = $twig;
         $this->boxService = $boxService;
+        $this->userProvider = $userProvider;
     }
 
     // Affiche le formulaire de modification avec les données actuelles
     public function showForm(Request $request, Response $response, array $args): Response
     {
         $boxId = $args['id'] ?? null;
-        $userId = UserService::getUser()['id'] ?? null;
+        $user = $this->userProvider->current();
+        $userId = $user ? $user->id : null;
 
         if (!$boxId) {
             $this->setFlashMessage('Identifiant de coffret invalide');
@@ -62,7 +65,8 @@ class UpdateBoxAction
     public function handleForm(Request $request, Response $response, array $args): Response
     {
         $boxId = $args['id'] ?? null;
-        $userId = UserService::getUser()['id'] ?? null;
+        $user = $this->userProvider->current();
+        $userId = $user?->id;
         $data = $request->getParsedBody();
 
         if (!$boxId || !$userId) {

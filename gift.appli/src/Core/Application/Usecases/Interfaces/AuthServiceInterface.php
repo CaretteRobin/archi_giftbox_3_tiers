@@ -2,12 +2,11 @@
 
 namespace Gift\Appli\Core\Application\Usecases\Interfaces;
 
+use Gift\Appli\Core\Domain\Entities\User;
+
 interface AuthServiceInterface {
-    public function register(string $email, string $password): string;
+    public function register(string $email, string $password): User;
 
-    public function login(string $email, string $password): string;
+    public function login(string $email, string $password): User;
 
-    public function logout(): void;
-
-    public function isEmailTaken(string $email): bool;
 }

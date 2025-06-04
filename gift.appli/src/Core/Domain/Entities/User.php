@@ -25,45 +25,4 @@ class User extends Model
     const ROLE_ADMIN = 100;
 
 
-    public function boxes(): HasMany
-    {
-        return $this->hasMany(Box::class, 'createur_id');
-    }
-
-    /**
-     * Méthode pour vérifier si l'utilisateur est admin
-     */
-    public function isAdmin()
-    {
-        return $this->role === self::ROLE_ADMIN;
-    }
-
-    /**
-     * Scope pour filtrer par rôle
-     */
-    public function scopeParRole($query, $role)
-    {
-        return $query->where('role', $role);
-    }
-
-    /**
-     * Méthode pour obtenir la valeur totale des boxes créées par l'utilisateur
-     */
-    public function totalValeurBoxes()
-    {
-        return $this->boxes()->sum('montant');
-    }
-
-    /**
-     * Méthode pour obtenir le nombre de boxes dans chaque statut
-     */
-    public function statistiquesBoxes(): array
-    {
-        return $this->boxes()
-            ->selectRaw('statut, count(*) as total')
-            ->groupBy('statut')
-            ->pluck('total', 'statut')
-            ->toArray();
-    }
-
 }

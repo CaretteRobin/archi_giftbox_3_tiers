@@ -5,38 +5,34 @@ namespace Gift\Appli\WebUI\Actions\Auth;
 
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
+use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\UserProvider;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class LogOutAction
 {
-    private AuthServiceInterface $authService;
-    private UserServiceInterface $userService;
 
-    public function __construct(AuthServiceInterface $authService, UserServiceInterface $userService)
+    use FlashRedirectTrait;
+
+    private AuthServiceInterface $authService;
+    private UserProviderInterface $userProvider;
+
+    public function __construct(AuthServiceInterface $authService, UserProviderInterface $userProvider)
     {
         $this->authService = $authService;
-        $this->userService = $userService;
+        $this->userProvider = $userProvider;
     }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $this->authService->logout();
-        $this->userService->removeUser();
-        $this->setFlashMessage('Déconnexion réussie.');
-        return $this->redirect($response, '/');
-    }
-
-    private function setFlashMessage(string $message): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        $_SESSION['flash'] = $message;
-    }
-
-    private function redirect(Response $response, string $url): Response
-    {
-        return $response->withHeader('Location', $url)->withStatus(302);
+        $this->userProvider->clear();
+        return $this->redirectWithFlash(
+            $response,
+            '/',
+            'Déconnexion réussie.',
+            'success'
+        );
     }
 }

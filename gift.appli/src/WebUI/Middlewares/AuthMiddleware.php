@@ -1,31 +1,55 @@
 <?php
 namespace Gift\Appli\WebUI\Middlewares;
 
+use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Slim\Psr7\Response;
 
 class AuthMiddleware implements MiddlewareInterface
 {
+
+    use FlashRedirectTrait;
+    private UserProviderInterface $userProvider;
+
+    public function __construct(UserProviderInterface $userProvider)
+    {
+        $this->userProvider = $userProvider;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        if (!$this->userProvider->isLoggedIn()) {
+            // Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
+            return ($this->redirectWithFlash(
+                $request,
+                'login',
+                'Vous devez être connecté pour accéder à cette page.',
+                'error'
+            ));
         }
 
-        // Si l’utilisateur n’est pas connecté
-        if (! isset($_SESSION['user'])) {
-            $_SESSION['flash'] = 'Vous devez être connecté pour accéder à cette page.';
+        // Si l'utilisateur est connecté, on continue le traitement de la requête
 
-            return (new Response())
-                ->withHeader('Location', '/auth')
-                ->withStatus(302);
+        $user = $this->userProvider->current();
+
+        if (!$user) {
+            // Si l'utilisateur n'est pas trouvé, on le redirige vers la page de connexion
+            return ($this->redirectWithFlash(
+                $request,
+                'login',
+                'Utilisateur introuvable.',
+                'error'
+            ));
         }
 
-        // Tout est OK : on laisse la requête continuer
+        // On peut ajouter l'utilisateur à la requête si nécessaire
+
+        $request = $request->withAttribute('user', $user);
+
         return $handler->handle($request);
     }
 }
