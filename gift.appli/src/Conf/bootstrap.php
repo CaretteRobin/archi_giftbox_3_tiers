@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use DI\Container;
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
-use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\AuthService;
-use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
 use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
 use Gift\Appli\WebUI\Middlewares\CsrfMiddleware;
@@ -15,6 +13,9 @@ use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
 use Gift\Appli\Core\Application\Usecases\Services\AuthorizationService;
 use Gift\Appli\Utils\Eloquent;
+use Gift\Appli\WebUI\Middlewares\FlashMessageMiddleware;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\UserProvider;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -36,7 +37,7 @@ $container = new Container();
 // --- SERVICE INJECTION (métier) ---
 $container->set(CatalogueServiceInterface::class, fn () => new CatalogueService());
 $container->set(AuthServiceInterface::class, fn () => new AuthService());
-$container->set(UserServiceInterface::class, fn () => new UserService());
+$container->set(UserProviderInterface::class, fn () => new UserProvider(), true);
 
 // --- AJOUT DU SERVICE D'AUTORISATION ---
 $container->set(AuthorizationServiceInterface::class, fn () => new AuthorizationService());
@@ -70,13 +71,12 @@ $container->set(Twig::class, fn () => $twig);
 
 // --- VARS GLOBALES TWIG ---
 $twig->getEnvironment()->addGlobal('asset_base', '/public');
-$twig->getEnvironment()->addGlobal('session', $_SESSION);
-$twig->getEnvironment()->addGlobal('flash', $_SESSION['flash'] ?? null);
 
 // --- TWIG MIDDLEWARE ---
 $app->add(TwigMiddleware::create($app, $twig));
 $app->add(new ErrorHandlerMiddleware($twig));
 $app->add(new CsrfMiddleware($twig));
+$app->add(new FlashMessageMiddleware($twig));
 
 // --- ROUTES ---
 (require_once __DIR__ . '/routes.php')($app);

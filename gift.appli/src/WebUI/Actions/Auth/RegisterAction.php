@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Gift\Appli\WebUI\Actions\Auth;
 
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
-use Gift\Appli\Core\Application\Usecases\Interfaces\UserServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Throwable;
@@ -28,11 +27,6 @@ class RegisterAction
 
         if (empty($email) || empty($password)) {
             $this->setFlashMessage('Email ou mot de passe manquant.');
-            return $this->redirect($response, '/auth');
-        }
-
-        if ($this->authService->isEmailTaken($email)) {
-            $this->setFlashMessage('Cet email est déjà utilisé.');
             return $this->redirect($response, '/auth');
         }
 

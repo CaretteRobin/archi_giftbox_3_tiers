@@ -5,7 +5,7 @@ namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
 use Gift\Appli\Core\Application\Usecases\Services\BoxService;
-use Gift\Appli\Core\Application\Usecases\Services\UserService;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Throwable;
@@ -13,16 +13,19 @@ use Throwable;
 class DeleteBoxAction
 {
     private BoxService $boxService;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(BoxService $boxService)
+    public function __construct(BoxService $boxService, UserProviderInterface $userProvider)
     {
         $this->boxService = $boxService;
+        $this->userProvider = $userProvider;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $boxId = $args['id'] ?? null;
-        $userId = UserService::getUser()['id'] ?? null;
+        $user = $this->userProvider->current();
+        $userId = $user ? $user->id : null;
 
         if (!$boxId || !$userId) {
             $this->setFlashMessage('Données invalides pour la suppression');
@@ -72,4 +75,3 @@ class DeleteBoxAction
         return $response->withHeader('Location', $url)->withStatus(302);
     }
 }
-

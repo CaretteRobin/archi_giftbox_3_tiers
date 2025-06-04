@@ -1,83 +1,78 @@
 <?php
+declare(strict_types=1);
+
 namespace Gift\Appli\WebUI\Providers;
 
-use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
-use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
 use Gift\Appli\Core\Domain\Entities\User;
-use Ramsey\Uuid\Uuid;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 
-class UserProvider
+/**
+ * Gestion centralisée de l’utilisateur connecté.
+ * Aucune autre classe ne doit manipuler directement la session.
+ */
+class UserProvider implements UserProviderInterface
 {
+    /** Clef utilisée dans $_SESSION */
+    private const SESSION_KEY = 'user';
+
     /**
-     * Enregistre un nouvel utilisateur
+     * Enregistre l’utilisateur (sans le mot de passe) dans la session.
      */
-    public function register(string $email, string $password): string
+    public function store(User $user): void
     {
-        try {
-            if ($this->isEmailTaken($email)) {
-                throw new InternalErrorException("Email déjà utilisé.");
-            }
+        $this->startSessionIfNeeded();
 
-            $user = new User();
-            $user->id = Uuid::uuid4()->toString();
-            $user->email = $email;
-            $user->password = password_hash($password, PASSWORD_DEFAULT);
-            $user->role = User::ROLE_CLIENT;
-            $user->save();
+        // Toutes les colonnes sauf le mot de passe
+        $userData = $user->toArray();
+        unset($userData['password']);
 
-            return $user->id;
-        } catch (\Throwable $e) {
-            throw new InternalErrorException("Erreur d'inscription : " . $e->getMessage());
+        $_SESSION[self::SESSION_KEY] = $userData;
+    }
+
+    /**
+     * Renvoie l’utilisateur actuellement connecté ou null.
+     */
+    public function current(): ?User
+    {
+        $this->startSessionIfNeeded();
+
+        $data = $_SESSION[self::SESSION_KEY] ?? null;
+        if ($data === null) {
+            return null;
         }
+
+        // On re-matérialise un objet User (le mot de passe reste absent)
+        $user = new User();
+        $user->forceFill($data);   // méthode Eloquent pour remplir sans protection
+        return $user;
     }
 
     /**
-     * Authentifie un utilisateur
+     * Supprime l’utilisateur stocké (déconnexion).
      */
-    public function authenticate(string $email, string $password): ?User
+    public function clear(): void
     {
-        try {
-            $user = User::where('email', $email)->first();
-            if (!$user || !password_verify($password, $user->password)) {
-                return null;
-            }
+        $this->startSessionIfNeeded();
+        unset($_SESSION[self::SESSION_KEY]);
+    }
 
-            return $user;
-        } catch (\Throwable $e) {
-            throw new InternalErrorException("Erreur d'authentification : " . $e->getMessage());
+    /**
+     * Indique si un utilisateur est connecté.
+     */
+    public function isLoggedIn(): bool
+    {
+        $this->startSessionIfNeeded();
+        return isset($_SESSION[self::SESSION_KEY]);
+    }
+
+    /* -------------------------------------------------------------------- */
+    /* Helpers                                                              */
+    /* -------------------------------------------------------------------- */
+
+    private function startSessionIfNeeded(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
-    }
-
-    /**
-     * Vérifie si un email est déjà utilisé
-     */
-    public function isEmailTaken(string $email): bool
-    {
-        return User::where('email', $email)->exists();
-    }
-
-    /**
-     * Récupère un utilisateur par son ID
-     */
-    public function getUserById(string $id): ?User
-    {
-        return User::find($id);
-    }
-
-    /**
-     * Récupère un utilisateur par son email
-     */
-    public function getUserByEmail(string $email): ?User
-    {
-        return User::where('email', $email)->first();
-    }
-
-    /**
-     * Met à jour le mot de passe d'un utilisateur
-     */
-    public function updatePassword(User $user, string $newPassword): void
-    {
-        $user->password = password_hash($newPassword, PASSWORD_DEFAULT);
-        $user->save();
     }
 }

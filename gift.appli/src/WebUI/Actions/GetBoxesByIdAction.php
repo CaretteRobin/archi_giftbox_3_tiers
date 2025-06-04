@@ -4,7 +4,7 @@ namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Exceptions\BoxException;
 use Gift\Appli\Core\Application\Usecases\Services\BoxService;
-use Gift\Appli\Core\Application\Usecases\Services\UserService;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -13,11 +13,13 @@ class GetBoxesByIdAction
 {
     private Twig $twig;
     private BoxService $boxService;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(Twig $twig, BoxService $boxService)
+    public function __construct(Twig $twig, BoxService $boxService, UserProviderInterface $userProvider)
     {
         $this->twig = $twig;
         $this->boxService = $boxService;
+        $this->userProvider = $userProvider;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -33,7 +35,8 @@ class GetBoxesByIdAction
             $boxDetails = $this->boxService->getBoxDetails($id);
 
             // Vérifier si l'utilisateur connecté est le créateur de la box
-            $userId = UserService::getUser()['id'] ?? null;
+            $user = $this->userProvider->current();
+            $userId = $user ? $user->id : null;
             $isOwner = $userId && $boxDetails['createur']['id'] === $userId;
 
             // Rendu de la vue

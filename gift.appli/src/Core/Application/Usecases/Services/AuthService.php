@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 
 class AuthService implements AuthServiceInterface
 {
-    public function register(string $email, string $password): string
+    public function register(string $email, string $password): User
     {
         try {
             if ($this->isEmailTaken($email)) {
@@ -24,13 +24,13 @@ class AuthService implements AuthServiceInterface
             $user->role = User::ROLE_CLIENT;
             $user->save();
 
-            return $user->id;
+            return $user;
         } catch (\Throwable $e) {
             throw new InternalErrorException("Erreur d'inscription : " . $e->getMessage());
         }
     }
 
-    public function login(string $email, string $password): string
+    public function login(string $email, string $password): User
     {
         try {
             $user = User::where('email', $email)->first();
@@ -38,21 +38,13 @@ class AuthService implements AuthServiceInterface
                 throw new EntityNotFoundException("Email ou mot de passe incorrect.");
             }
 
-            return $user->id;
+            return $user;
         } catch (\Throwable $e) {
             throw new InternalErrorException("Erreur de connexion : " . $e->getMessage());
         }
     }
 
-    public function logout(): void
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        unset($_SESSION['user']);
-    }
-
-    public function isEmailTaken(string $email): bool
+    private function isEmailTaken(string $email): bool
     {
         return User::where('email', $email)->exists();
     }

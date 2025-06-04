@@ -20,6 +20,7 @@ class ShowAuthPageAction
     public function __invoke(Request $request, Response $response): Response
     {
         $csrfToken = CsrfTokenProvider::generate();
+//        $csrfToken = '';
 
         return $this->twig->render($response, 'pages/auth.twig', [
             'csrf_token' => $csrfToken

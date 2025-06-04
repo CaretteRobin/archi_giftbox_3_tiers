@@ -2,8 +2,8 @@
 
 namespace Gift\Appli\WebUI\Actions;
 
-use Gift\Appli\Core\Application\Usecases\Services\UserService;
 use Gift\Appli\Core\Domain\Entities\Box;
+use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -11,15 +11,18 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class GetBoxesAction
 {
     private Twig $twig;
+    private UserProviderInterface $userProvider;
 
-    public function __construct(Twig $twig)
+    public function __construct(Twig $twig, UserProviderInterface $userProvider)
     {
         $this->twig = $twig;
+        $this->userProvider = $userProvider;
     }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $userId = UserService::getUser()['id'] ?? null;
+        $user = $this->userProvider->current();
+        $userId = $user ? $user->id : null;
 
         // Récupérer toutes les boxes de l'utilisateur connecté
         $boxes = Box::where('createur_id', $userId)
