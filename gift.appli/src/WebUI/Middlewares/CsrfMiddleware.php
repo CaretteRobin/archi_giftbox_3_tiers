@@ -1,15 +1,26 @@
 <?php
 namespace Gift\Appli\WebUI\Middlewares;
 
+use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
 use Gift\Appli\WebUI\Providers\CsrfTokenProvider;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Response;
+use Slim\Views\Twig;
 
 class CsrfMiddleware implements MiddlewareInterface
 {
+    use FlashRedirectTrait;
+
+    private Twig $twig;
+
+    public function __construct(Twig $twig)
+    {
+        $this->twig = $twig;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Vérifier seulement les requêtes POST, PUT, DELETE, PATCH
@@ -21,10 +32,13 @@ class CsrfMiddleware implements MiddlewareInterface
             try {
                 CsrfTokenProvider::check($csrfToken);
             } catch (\Exception $e) {
-                $_SESSION['flash'] = 'Erreur de sécurité : ' . $e->getMessage();
-                return (new Response())
-                    ->withHeader('Location', '/')
-                    ->withStatus(302);
+                $response = new Response();
+                return $this->redirectWithFlash(
+                    $response,
+                    'auth',
+                    'Token CSRF invalide. Veuillez réessayer.',
+                    'error'
+                );
             }
         }
 

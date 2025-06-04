@@ -38,7 +38,6 @@ class FlashMessageMiddleware implements MiddlewareInterface
                 'message' => urldecode($flashMessage),
                 'type' => urldecode($flashType)
             ]);
-
         }
         return $handler->handle($request);
     }
