@@ -8,15 +8,19 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\Twig;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class GetPrestationByIdAction
 {
     private CatalogueServiceInterface $catalogueService;
-    private string $template = 'pages/prestation-details.twig';
+    private Twig $twig;
 
-    public function __construct(CatalogueServiceInterface $catalogueService)
+    public function __construct(CatalogueServiceInterface $catalogueService, Twig $twig)
     {
         $this->catalogueService = $catalogueService;
+        $this->twig = $twig;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -29,11 +33,25 @@ class GetPrestationByIdAction
 
         try {
             $prestation = $this->catalogueService->getPrestationById($id);
+            // Récupération de la catégorie associée
+            $categorie = $prestation->categorie;
+
+            // Récupération des coffrets associés à cette prestation
+            $coffrets = $prestation->coffretTypes;
+
+            // Formater le tarif et l'URL de l'image
+            $tarifFormate = $prestation->getTarifFormateAttribute();
+            $imageUrl = $prestation->getImageUrl();
+
+            return $this->twig->render($response, 'pages/prestation-details.twig', [
+                'prestation' => $prestation,
+                'categorie' => $categorie,
+                'coffrets' => $coffrets,
+                'tarifFormate' => $tarifFormate,
+                'imageUrl' => $imageUrl
+            ]);
         } catch (EntityNotFoundException $e) {
             throw new HttpNotFoundException($request, $e->getMessage());
         }
-
-        $view = Twig::fromRequest($request);
-        return $view->render($response, $this->template, ['prestation' => $prestation]);
     }
 }
