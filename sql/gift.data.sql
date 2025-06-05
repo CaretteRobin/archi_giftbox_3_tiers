@@ -230,21 +230,24 @@ INSERT INTO `theme` (`id`, `libelle`, `description`) VALUES
 (4,	'gastronomie',	'les plaisirs culinaires, toujours un must');
 
 INSERT INTO `user` (`id`, `email`, `password`, `role`) VALUES
-('9c02505f-af68-4b51-a5b6-e52b1805eee1',	'aurore06@example.org',	'$2y$10$jMVU9TsmnErWYHh6I.DxWOZNiuEB7.9mLEPUlMvylrkfWNV53cZoS',	1),
-('9c02505f-c747-45ef-aedd-99e03e3e7e49',	'laurence.duval@example.com',	'$2y$10$X5PAuPwcTFncA3sTcC3eIuVVxI3UYKL8Wpj2H9JBqLLdlOk0AUA3C',	1),
-('9c02505f-db7f-45c3-b89c-88c34da9874a',	'simone24@example.com',	'$2y$10$0tU9Bc3fN5uC1mHn0K24Yu1bbERpsSjNqhmYdhhKtUVaQBMtojhre',	1),
-('9c02505f-efa1-496d-bfe6-d3d9f5e58b8e',	'ferrand.monique@example.net',	'$2y$10$oOnQnw2waqdCW1qPkISpqejMxUyPWJb64pYL9OfnyeiHyn7ePBsuK',	1),
-('9c025060-0806-4d3b-a3c9-449356581916',	'dupont.noel@example.net',	'$2y$10$H7m2EBbJQDWnR7lFgIXI6eS9hs7V/z7ZB9GwAMNpLXSyfchzYaoPC',	1),
-('9c025060-1c21-4c30-8c81-879a11a19c76',	'paul86@example.org',	'$2y$10$7Ke9Dcudngr1o0xZc2z9cOtgi/Kmqqple0uYncBdWlNlBAlys5J1C',	1),
-('9c025060-305b-4e47-aa94-313cdc1381f8',	'wprevost@example.net',	'$2y$10$0N9DtyX1wGBsXWKj0VZEwOKL7y455Tyhig0yhILwqK88zkgggaNz.',	1),
-('9c025060-44d1-44f9-8899-bf0ffb6252a1',	'lebreton.claire@example.org',	'$2y$10$bxBo1a9qY3NCWzbcZTiJx.wP2GZxcW5nPi5qZJN0BaQUQz4kGlDIe',	1),
-('9c025060-5981-4cd7-82ea-6eb04c5ad86a',	'poirier.danielle@example.com',	'$2y$10$UmaxQfZLfLEszR/WN64IMeYK.MiBb/9PKUJDeWD7vYWvVDh/43MLq',	1),
-('9c025060-6e27-4ae4-9103-89443a25b44c',	'mathilde.michaud@example.com',	'$2y$10$QERhc7WsGOcKasWyz8roaeaHNJdMz0hD/865q3gKyIhYbWUKdIpb2',	1),
-('9c025060-828e-4660-a196-17deb7d405a0',	'camille.grondin@example.net',	'$2y$10$J.6hOxAUq9CzpnhpE5iwNuOU3EfTqpMHsm6WKGnQ.7uKBBd7BvQoS',	1),
-('9c025060-96f7-4798-a36d-7e9d52e0ed72',	'lopes.benoit@example.net',	'$2y$10$/nX.tezmZZd7ohZ5Nb1nhO6aBqOVcrYu4FXABaoy9ds3/d1H9LW0y',	1),
-('9c025060-ab42-413d-a32c-c45845d3f98d',	'yhubert@example.net',	'$2y$10$pElwpsdJapb46OUAwLimEetjPJ37IkPmOd/1BRTPi/avj6358KnHe',	1),
-('9c025060-bfb8-4eef-a517-17df4f0ccc67',	'fleury.jacques@example.com',	'$2y$10$Xw69KYATwv0swU970LAOBOWwv63.cVb1Kq/880Y42611umePa1Y.u',	1),
-('9c025060-d3f4-4f24-9df4-5c2cff4307a3',	'lefort.roger@example.net',	'$2y$10$fQBkcScptbwvYWrjisHg3OdWiKCyH0VQ5jhISQ5PUWcRpbgdLmPiC',	1),
-('9c025060-e843-4729-b2cd-44c29636764a',	'admin@gift.net',	'$2y$10$JAC.5T.rdONr/ZtgG8o9ceNiYdV.h03WDL4YjVfpPQKSys4MTkh0K',	100);
+('521d4516-8f41-471a-ad92-7f8ebf514f9e', 'nathan@example.com', '$2y$10$0JMt9xXWI6zZFitHTGxr6uwI4gkq7fQyzrT9.uJlBxuCKfYAhZWeS', 1),
+('9c02505f-af68-4b51-a5b6-e52b1805eee1', 'aurore06@example.org', '$2y$10$jMVU9TsmnErWYHh6I.DxWOZNiuEB7.9mLEPUlMvylrkfWNV53cZoS', 1),
+('9c02505f-c747-45ef-aedd-99e03e3e7e49', 'laurence.duval@example.com', '$2y$10$X5PAuPwcTFncA3sTcC3eIuVVxI3UYKL8Wpj2H9JBqLLdlOk0AUA3C', 1),
+('9c02505f-db7f-45c3-b89c-88c34da9874a', 'simone24@example.com', '$2y$10$0tU9Bc3fN5uC1mHn0K24Yu1bbERpsSjNqhmYdhhKtUVaQBMtojhre', 1),
+('9c02505f-efa1-496d-bfe6-d3d9f5e58b8e', 'ferrand.monique@example.net', '$2y$10$oOnQnw2waqdCW1qPkISpqejMxUyPWJb64pYL9OfnyeiHyn7ePBsuK', 1),
+('9c025060-0806-4d3b-a3c9-449356581916', 'dupont.noel@example.net', '$2y$10$H7m2EBbJQDWnR7lFgIXI6eS9hs7V/z7ZB9GwAMNpLXSyfchzYaoPC', 1),
+('9c025060-1c21-4c30-8c81-879a11a19c76', 'paul86@example.org', '$2y$10$7Ke9Dcudngr1o0xZc2z9cOtgi/Kmqqple0uYncBdWlNlBAlys5J1C', 1),
+('9c025060-305b-4e47-aa94-313cdc1381f8', 'wprevost@example.net', '$2y$10$mgCey2proiQ5j5d7KdjDY.of8ArlOuASGEDzFlpDLvghGSWKLnRPG', 1),
+('9c025060-44d1-44f9-8899-bf0ffb6252a1', 'lebreton.claire@example.org', '$2y$10$bxBo1a9qY3NCWzbcZTiJx.wP2GZxcW5nPi5qZJN0BaQUQz4kGlDIe', 1),
+('9c025060-5981-4cd7-82ea-6eb04c5ad86a', 'poirier.danielle@example.com', '$2y$10$UmaxQfZLfLEszR/WN64IMeYK.MiBb/9PKUJDeWD7vYWvVDh/43MLq', 1),
+('9c025060-6e27-4ae4-9103-89443a25b44c', 'mathilde.michaud@example.com', '$2y$10$QERhc7WsGOcKasWyz8roaeaHNJdMz0hD/865q3gKyIhYbWUKdIpb2', 1),
+('9c025060-828e-4660-a196-17deb7d405a0', 'camille.grondin@example.net', '$2y$10$J.6hOxAUq9CzpnhpE5iwNuOU3EfTqpMHsm6WKGnQ.7uKBBd7BvQoS', 1),
+('9c025060-96f7-4798-a36d-7e9d52e0ed72', 'lopes.benoit@example.net', '$2y$10$/nX.tezmZZd7ohZ5Nb1nhO6aBqOVcrYu4FXABaoy9ds3/d1H9LW0y', 1),
+('9c025060-ab42-413d-a32c-c45845d3f98d', 'yhubert@example.net', '$2y$10$pElwpsdJapb46OUAwLimEetjPJ37IkPmOd/1BRTPi/avj6358KnHe', 1),
+('9c025060-bfb8-4eef-a517-17df4f0ccc67', 'fleury.jacques@example.com', '$2y$10$Xw69KYATwv0swU970LAOBOWwv63.cVb1Kq/880Y42611umePa1Y.u', 1),
+('9c025060-d3f4-4f24-9df4-5c2cff4307a3', 'lefort.roger@example.net', '$2y$10$fQBkcScptbwvYWrjisHg3OdWiKCyH0VQ5jhISQ5PUWcRpbgdLmPiC', 1),
+('9c025060-e843-4729-b2cd-44c29636764a', 'admin@gift.net', '$2y$10$JAC.5T.rdONr/ZtgG8o9ceNiYdV.h03WDL4YjVfpPQKSys4MTkh0K', 100),
+('aa3a4572-2b5d-4190-8a2d-0ee3b1a54c67', 'test2@example.com', '$2y$10$3eLsATC.TMb2cCxTpBJsheDf/3XSoZXkip0izhjiz/.IhzlHOv6QO', 1),
+('fd8bf96d-1070-4be9-ad71-def1c33bf8fe', 'test@example.com', '$2y$10$mgCey2proiQ5j5d7KdjDY.of8ArlOuASGEDzFlpDLvghGSWKLnRPG', 100);
 
 -- 2025-03-28 10:36:41
