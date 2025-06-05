@@ -4,7 +4,8 @@ namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Exceptions\BoxException;
 use Gift\Appli\Core\Application\Usecases\Services\BoxService;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\CsrfTokenProvider;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -13,20 +14,19 @@ class CreateBoxAction
 {
     private Twig $twig;
     private BoxService $boxService;
-    private UserProviderInterface $userProvider;
+    private AuthProviderInterface $authProvider;
 
-    public function __construct(Twig $twig, BoxService $boxService, UserProviderInterface $userProvider)
+    public function __construct(Twig $twig, BoxService $boxService, AuthProviderInterface $authProvider)
     {
         $this->twig = $twig;
         $this->boxService = $boxService;
-        $this->userProvider = $userProvider;
+        $this->authProvider = $authProvider;
     }
 
     // Affiche le formulaire de création
     public function showForm(Request $request, Response $response): Response
     {
-        // générer un token CSRF pour le formulaire
-        $token = CsrfTokenProvider::generate(); // Uncomment if CSRF token generation is implemented
+        $token = CsrfTokenProvider::generate();
         return $this->twig->render($response, 'pages/box-create.twig', [
             'csrf_token' => $token
         ]);
@@ -36,8 +36,8 @@ class CreateBoxAction
     public function handleForm(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
-        $user = $this->userProvider->current();
-        $userId = $user ? $user->id : null;
+        $user = $this->authProvider->getLoggedUser();
+        $userId = $user?->id;
 
         if (!$userId) {
             return $response->withHeader('Location', '/auth')->withStatus(302);
@@ -50,7 +50,8 @@ class CreateBoxAction
             $isGift = isset($data['kdo']) && $data['kdo'] === '1';
             $giftMessage = $data['message_kdo'] ?? null;
 
-            // Créer la box
+//            print_r("Name: $name, Description: $description, Is Gift: $isGift, Gift Message: $giftMessage");
+//            error_log("Name: $name, Description: $description, Is Gift: $isGift, Gift Message: $giftMessage");
             $box = $this->boxService->createBox(
                 $name,
                 $description,

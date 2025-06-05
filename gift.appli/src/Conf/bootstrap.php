@@ -3,19 +3,21 @@
 declare(strict_types=1);
 
 use DI\Container;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
-use Gift\Appli\Core\Application\Usecases\Services\AuthService;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthorizationServiceInterface;
-use Gift\Appli\WebUI\Middlewares\AuthorizationMiddleware;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthnServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\BoxServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\AuthnService;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthzServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\BoxService;
+use Gift\Appli\WebUI\Middlewares\AuthzMiddleware;
 use Gift\Appli\WebUI\Middlewares\CsrfMiddleware;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\CatalogueService;
-use Gift\Appli\Core\Application\Usecases\Services\AuthorizationService;
+use Gift\Appli\Core\Application\Usecases\Services\AuthzService;
 use Gift\Appli\Utils\Eloquent;
 use Gift\Appli\WebUI\Middlewares\FlashMessageMiddleware;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
-use Gift\Appli\WebUI\Providers\UserProvider;
+use Gift\Appli\WebUI\Providers\AuthProvider;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -37,14 +39,20 @@ $container = new Container();
 
 // --- SERVICE INJECTION (métier) ---
 $container->set(CatalogueServiceInterface::class, fn () => new CatalogueService());
-$container->set(AuthServiceInterface::class, fn () => new AuthService());
-$container->set(UserProviderInterface::class, fn () => new UserProvider(), true);
+$container->set(AuthnServiceInterface::class, fn () => new AuthnService());
+$container->set(AuthProviderInterface::class, function (Container $container) {
+    return new AuthProvider(
+        $container->get(AuthnServiceInterface::class)
+    );
+}, true);
+$container->set(BoxServiceInterface::class, fn () => new BoxService());
+
 
 // --- AJOUT DU SERVICE D'AUTORISATION ---
-$container->set(AuthorizationServiceInterface::class, fn () => new AuthorizationService());
-$container->set(AuthorizationMiddleware::class, function (Container $container) {
-    return new AuthorizationMiddleware(
-        $container->get(AuthorizationServiceInterface::class)
+$container->set(AuthzServiceInterface::class, fn () => new AuthzService());
+$container->set(AuthzMiddleware::class, function (Container $container) {
+    return new AuthzMiddleware(
+        $container->get(AuthzServiceInterface::class)
     );
 });
 

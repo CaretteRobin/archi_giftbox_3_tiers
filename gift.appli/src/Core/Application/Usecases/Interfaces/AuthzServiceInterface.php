@@ -6,7 +6,7 @@ namespace Gift\Appli\Core\Application\Usecases\Interfaces;
 use Gift\Appli\Core\Domain\Entities\Box;
 use Gift\Appli\Core\Domain\Entities\User;
 
-interface AuthorizationServiceInterface
+interface AuthzServiceInterface
 {
     // Définition des opérations sous forme de constantes
     public const CREATE_BOX = 'create_box';

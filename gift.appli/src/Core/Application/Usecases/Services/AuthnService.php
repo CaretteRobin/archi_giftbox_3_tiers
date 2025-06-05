@@ -4,11 +4,11 @@ namespace Gift\Appli\Core\Application\Usecases\Services;
 
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
 use Gift\Appli\Core\Application\Exceptions\InternalErrorException;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthnServiceInterface;
 use Gift\Appli\Core\Domain\Entities\User;
 use Ramsey\Uuid\Uuid;
 
-class AuthService implements AuthServiceInterface
+class AuthnService implements AuthnServiceInterface
 {
     public function register(string $email, string $password): User
     {

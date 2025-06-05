@@ -7,12 +7,12 @@ use Exception;
 class BoxException extends Exception
 {
     // Constantes pour les codes d'erreur
-    const int INVALID_BOX = 10;
-    const int BOX_NOT_MODIFIABLE = 11;
-    const int INVALID_PRESTATION = 20;
-    const int INVALID_QUANTITY = 21;
-    const int INSUFFICIENT_PRESTATIONS = 30;
-    const int UNAUTHORIZED_USER = 40;
-    const int INVALID_DATA = 50;
-    const int DELETE_ERROR = 60;
+    const INVALID_BOX = 10;
+    const BOX_NOT_MODIFIABLE = 11;
+    const INVALID_PRESTATION = 20;
+    const INVALID_QUANTITY = 21;
+    const INSUFFICIENT_PRESTATIONS = 30;
+    const UNAUTHORIZED_USER = 40;
+    const INVALID_DATA = 50;
+    const DELETE_ERROR = 60;
 }

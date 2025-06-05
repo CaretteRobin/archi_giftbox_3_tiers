@@ -3,7 +3,7 @@
 namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\Twig;
@@ -12,20 +12,20 @@ class HomeAction
 {
     private CatalogueServiceInterface $catalogueService;
     private Twig $twig;
-    private UserProviderInterface $userProvider;
+    private AuthProviderInterface $authProvider;
 
-    public function __construct(CatalogueServiceInterface $catalogueService, Twig $twig, UserProviderInterface $userProvider)
+    public function __construct(Twig $twig, CatalogueServiceInterface $catalogueService, AuthProviderInterface $authProvider)
     {
         $this->catalogueService = $catalogueService;
         $this->twig = $twig;
-        $this->userProvider = $userProvider;
+        $this->authProvider = $authProvider;
     }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $user = $this->userProvider->current();
+        $user = $this->authProvider->getLoggedUser();
 
-        $categories = array_slice($this->catalogueService->getCategories(), 0, 3);
+        $categories = array_slice($this->catalogueService->getCategories()->toArray(), 0, 3);
 
         $params = ['categories' => $categories];
         if ($user) {

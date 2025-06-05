@@ -8,6 +8,7 @@ services:
     volumes:
       - ./gift.appli/public:/var/www/html
       - ./gift.appli/src:/var/www/src
+      - ./gift.appli/tests:/var/www/tests
       - ./.env:/var/www/src/.env
     working_dir: /var/www/src
     networks:

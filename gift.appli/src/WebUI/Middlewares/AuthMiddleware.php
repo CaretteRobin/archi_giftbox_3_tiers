@@ -2,51 +2,51 @@
 namespace Gift\Appli\WebUI\Middlewares;
 
 use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Psr7\Response;
 
 class AuthMiddleware implements MiddlewareInterface
 {
 
     use FlashRedirectTrait;
-    private UserProviderInterface $userProvider;
+    private AuthProviderInterface $authProvider;
 
-    public function __construct(UserProviderInterface $userProvider)
+    public function __construct(AuthProviderInterface $authProvider)
     {
-        $this->userProvider = $userProvider;
+        $this->authProvider = $authProvider;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 
     {
-
-        error_log('[DEBUG] SESSION : ' . print_r($_SESSION, true));
-        
-        if (!$this->userProvider->isLoggedIn()) {
+        if (!$this->authProvider->isLoggedIn()) {
             // Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
-            return ($this->redirectWithFlash(
-                $request,
-                'login',
+            $response = new Response();
+            return $this->redirectWithFlash(
+                $response,
+                'auth',
                 'Vous devez être connecté pour accéder à cette page.',
                 'error'
-            ));
+            );
         }
 
         // Si l'utilisateur est connecté, on continue le traitement de la requête
 
-        $user = $this->userProvider->current();
+        $user = $this->authProvider->getLoggedUser();
 
         if (!$user) {
             // Si l'utilisateur n'est pas trouvé, on le redirige vers la page de connexion
-            return ($this->redirectWithFlash(
-                $request,
-                'login',
+            $response = new Response();
+            return $this->redirectWithFlash(
+                $response,
+                'auth',
                 'Utilisateur introuvable.',
                 'error'
-            ));
+            );
         }
 
         // On peut ajouter l'utilisateur à la requête si nécessaire

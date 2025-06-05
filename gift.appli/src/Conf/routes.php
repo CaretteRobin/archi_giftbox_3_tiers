@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 
+use Gift\Appli\WebUI\Actions\AddPrestationToBoxAction;
 use Gift\Appli\WebUI\Actions\DeleteBoxAction;
 use Gift\Appli\WebUI\Actions\GetBoxesAction;
 use Gift\Appli\WebUI\Actions\GetBoxesByIdAction;
@@ -66,6 +67,7 @@ return function (App $app): App {
     $app->group('', function (RouteCollectorProxy $group): void {
 
         $group->group('/boxes', function (RouteCollectorProxy $pre) {
+            $pre->post('/add-prestation', AddPrestationToBoxAction::class)->setName('add_prestation_to_box');
             $pre->get('', GetBoxesAction::class)->setName('list_boxes');
             $pre->get('/create', [CreateBoxAction::class, 'showForm'])->setName('box_create');
             $pre->post('/create', [CreateBoxAction::class, 'handleForm'])->setName('box_create_submit');
