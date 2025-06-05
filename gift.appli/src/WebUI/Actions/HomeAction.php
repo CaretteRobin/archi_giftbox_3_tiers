@@ -14,7 +14,7 @@ class HomeAction
     private Twig $twig;
     private AuthProviderInterface $authProvider;
 
-    public function __construct(CatalogueServiceInterface $catalogueService, Twig $twig, AuthProviderInterface $authProvider)
+    public function __construct(Twig $twig, CatalogueServiceInterface $catalogueService, AuthProviderInterface $authProvider)
     {
         $this->catalogueService = $catalogueService;
         $this->twig = $twig;
@@ -25,7 +25,7 @@ class HomeAction
     {
         $user = $this->authProvider->getLoggedUser();
 
-        $categories = array_slice($this->catalogueService->getCategories(), 0, 3);
+        $categories = array_slice($this->catalogueService->getCategories()->toArray(), 0, 3);
 
         $params = ['categories' => $categories];
         if ($user) {

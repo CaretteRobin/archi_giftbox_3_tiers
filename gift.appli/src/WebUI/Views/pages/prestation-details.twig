@@ -44,9 +44,34 @@
 
                             <div class="flex items-center justify-between mt-6">
                                 <span class="text-2xl font-bold text-indigo-600">{{ tarifFormate }}</span>
-                                <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
-                                    Ajouter au panier
-                                </button>
+                                {% if user %}
+                                    {% if userBoxes and userBoxes|length > 0 %}
+                                        <form action="{{ url_for('add_prestation_to_box') }}" method="POST" class="flex space-x-2">
+                                            <select name="box_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                                <option value="">Sélectionner une box</option>
+                                                {% for box in userBoxes %}
+                                                    {% if box.statut == 1 %}
+                                                        <option value="{{ box.id }}">{{ box.libelle }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <input type="hidden" name="prestation_id" value="{{ prestation.id }}">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                                Ajouter à la box
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <a href="{{ url_for('box_create') }}" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                            Créer une box
+                                        </a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="{{ url_for('login') }}" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                        Se connecter pour ajouter
+                                    </a>
+                                {% endif %}
+
                             </div>
                         </div>
 

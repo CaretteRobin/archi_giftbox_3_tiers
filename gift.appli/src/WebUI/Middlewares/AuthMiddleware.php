@@ -28,7 +28,7 @@ class AuthMiddleware implements MiddlewareInterface
             $response = new Response();
             return $this->redirectWithFlash(
                 $response,
-                'auth_page',
+                'auth',
                 'Vous devez être connecté pour accéder à cette page.',
                 'error'
             );
@@ -43,7 +43,7 @@ class AuthMiddleware implements MiddlewareInterface
             $response = new Response();
             return $this->redirectWithFlash(
                 $response,
-                'auth_page',
+                'auth',
                 'Utilisateur introuvable.',
                 'error'
             );
