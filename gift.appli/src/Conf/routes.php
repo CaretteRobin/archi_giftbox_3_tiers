@@ -65,9 +65,6 @@ return function (App $app): App {
        -----------------------------------------------------------------*/
     $app->group('', function (RouteCollectorProxy $group): void {
 
-        // Déconnexion
-        $group->get('/logout', LogOutAction::class)->setName('logout');
-
         $group->group('/boxes', function (RouteCollectorProxy $pre) {
             $pre->get('', GetBoxesAction::class)->setName('list_boxes');
             $pre->get('/create', [CreateBoxAction::class, 'showForm'])->setName('box_create');
@@ -80,6 +77,9 @@ return function (App $app): App {
             });
         });
         $group->get('/profil', ProfilAction::class)->setName('profil');
+
+        // Déconnexion
+        $group->get('/logout', LogOutAction::class)->setName('logout');
 
     })->add(AuthMiddleware::class);
 

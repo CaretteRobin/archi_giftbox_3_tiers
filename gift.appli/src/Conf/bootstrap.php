@@ -25,6 +25,7 @@ use Gift\Appli\WebUI\Actions\Api\ListCategoriesApiAction;
 use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
 use Gift\Appli\WebUI\Actions\Api\ListPrestationsByCategorieApiAction;
 use Gift\Appli\WebUI\Actions\Api\GetCoffretApiAction;
+use Gift\Appli\WebUI\Actions\GetPrestationByIdAction;
 
 // --- SESSION ---
 if (session_status() === PHP_SESSION_NONE) {

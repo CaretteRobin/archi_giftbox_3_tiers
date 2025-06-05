@@ -22,6 +22,9 @@ class AuthMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
 
     {
+
+        error_log('[DEBUG] SESSION : ' . print_r($_SESSION, true));
+        
         if (!$this->userProvider->isLoggedIn()) {
             // Si l'utilisateur n'est pas connecté, on le redirige vers la page de connexion
             return ($this->redirectWithFlash(

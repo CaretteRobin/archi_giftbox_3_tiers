@@ -25,7 +25,11 @@ class CreateBoxAction
     // Affiche le formulaire de création
     public function showForm(Request $request, Response $response): Response
     {
-        return $this->twig->render($response, 'pages/box-create.twig');
+        // générer un token CSRF pour le formulaire
+        $token = CsrfTokenProvider::generate(); // Uncomment if CSRF token generation is implemented
+        return $this->twig->render($response, 'pages/box-create.twig', [
+            'csrf_token' => $token
+        ]);
     }
 
     // Traite le formulaire de création
