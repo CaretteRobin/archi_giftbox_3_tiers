@@ -59,6 +59,31 @@ It is a **console-based PHP application** that interacts with a MySQL database u
    ```bash  
    php -S localhost:8000 -t gift.appli/public/  
    ```
+   
+## Execute the tests
+## Running Tests via Command Line
+To run all tests, use the following command in your terminal:
+```bash
+docker-compose exec giftbox-php php vendor/bin/phpunit
+```
+### Running a Specific Test File
+If you want to run only a specific test file:
+```bash
+docker-compose exec giftbox-php php vendor/bin/phpunit --bootstrap /var/www/tests/bootstrap.php /var/www/tests/TestName.php
+```
+For example:
+````bash
+docker-compose exec giftbox-php php vendor/bin/phpunit --bootstrap /var/www/tests/bootstrap.php /var/www/tests/AuthMiddlewareTest.php
+````
+### Running a Specific Test Method
+If you want to run only a specific test method:
+```bash
+docker-compose exec giftbox-php php vendor/bin/phpunit --bootstrap /var/www/tests/bootstrap.php --filter=methodName /var/www/tests/TestName.php
+````
+For example:
+```bash
+docker-compose exec giftbox-php php vendor/bin/phpunit --bootstrap /var/www/tests/bootstrap.php --filter=testProcessWithAuthenticatedUser /var/www/tests/AuthMiddlewareTest.php
+```
 
 6. **Access the application**  
    Open your browser and navigate to [http://localhost:8000](http://localhost:8000).
