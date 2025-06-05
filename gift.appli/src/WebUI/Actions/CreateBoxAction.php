@@ -60,6 +60,9 @@ class CreateBoxAction
                 $userId
             );
 
+            // Rediriger vers la page de détails de la box
+            // Créer un message flash
+
             return $response->withHeader('Location', "/boxes/{$box->id}")->withStatus(302);
 
         } catch (BoxException $e) {
