@@ -4,6 +4,8 @@ namespace Tests;
 
 use Gift\Appli\Core\Application\Usecases\Interfaces\CatalogueServiceInterface;
 use Gift\Appli\WebUI\Actions\Api\ListPrestationsApiAction;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Mockery;
 
 class ListPrestationsApiActionTest extends TestCase
@@ -19,9 +21,23 @@ class ListPrestationsApiActionTest extends TestCase
         $this->action = new ListPrestationsApiAction($this->catalogueService);
     }
 
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    /**
+     * Crée une requête HTTP simulée pour les tests
+     */
+    protected function createMockRequest()
+    {
+        return Mockery::mock(ServerRequestInterface::class);
+    }
+
     public function testInvokeReturnsAllPrestations()
     {
-        // Arrange
+        // Arrangement
         $request = $this->createMockRequest();
         [$response, $stream] = $this->createMockResponse();
 
@@ -31,11 +47,11 @@ class ListPrestationsApiActionTest extends TestCase
         ];
 
         $prestations1 = [
-            ['id' => 1, 'titre' => 'Dîner gastronomique', 'cat_id' => 1]
+            ['id' => 1, 'libelle' => 'Dîner gastronomique', 'cat_id' => 1]
         ];
 
         $prestations2 = [
-            ['id' => 2, 'titre' => 'Nuit en hôtel 5 étoiles', 'cat_id' => 2]
+            ['id' => 2, 'libelle' => 'Nuit en hôtel 5 étoiles', 'cat_id' => 2]
         ];
 
         // Configurer le comportement du mock CatalogueService
@@ -53,7 +69,10 @@ class ListPrestationsApiActionTest extends TestCase
             ->once()
             ->andReturn($prestations2);
 
-        // Configurer le comportement attendu pour l'écriture de la réponse
+        // Action
+        $result = ($this->action)($request, $response);
+
+        // Vérification
         $expectedPrestations = array_merge($prestations1, $prestations2);
         $expectedResponse = [
             "type" => "collection",
@@ -61,20 +80,13 @@ class ListPrestationsApiActionTest extends TestCase
             "prestations" => $expectedPrestations
         ];
 
-        $stream->shouldReceive('write')
-            ->with(json_encode($expectedResponse))
-            ->once();
-
-        // Act
-        $result = ($this->action)($request, $response);
-
-        // Assert
+        $this->assertEquals(json_encode($expectedResponse), $stream->__toString());
         $this->assertSame($response, $result);
     }
 
     public function testInvokeWithEmptyCategories()
     {
-        // Arrange
+        // Arrangement
         $request = $this->createMockRequest();
         [$response, $stream] = $this->createMockResponse();
 
@@ -83,21 +95,17 @@ class ListPrestationsApiActionTest extends TestCase
             ->once()
             ->andReturn([]);
 
-        // Configurer le comportement attendu pour l'écriture de la réponse
+        // Action
+        $result = ($this->action)($request, $response);
+
+        // Vérification
         $expectedResponse = [
             "type" => "collection",
             "count" => 0,
             "prestations" => []
         ];
 
-        $stream->shouldReceive('write')
-            ->with(json_encode($expectedResponse))
-            ->once();
-
-        // Act
-        $result = ($this->action)($request, $response);
-
-        // Assert
+        $this->assertEquals(json_encode($expectedResponse), $stream->__toString());
         $this->assertSame($response, $result);
     }
 }

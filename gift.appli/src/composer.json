@@ -16,8 +16,13 @@
     "mockery/mockery": "^1.6"
   },
   "autoload": {
-    "psr-4" : {
+    "psr-4": {
       "Gift\\Appli\\": "./"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "../tests/"
     }
   }
 }

@@ -4,32 +4,58 @@ namespace Tests;
 
 use Gift\Appli\Core\Domain\Entities\User;
 use Gift\Appli\WebUI\Middlewares\AuthMiddleware;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Psr7\Response;
 use Mockery;
 
 class AuthMiddlewareTest extends TestCase
 {
     private $middleware;
-    private $userProvider;
+    private $authProvider;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->userProvider = Mockery::mock(UserProviderInterface::class);
+        $this->authProvider = Mockery::mock(AuthProviderInterface::class);
 
         // Créer le middleware avec une implémentation personnalisée de redirectWithFlash
-        $this->middleware = new class($this->userProvider) extends AuthMiddleware {
-            public function redirectWithFlash($request, $path, $message, $type)
-            {
+        $this->middleware = new class($this->authProvider) extends AuthMiddleware {
+            // Signature exacte comme dans le trait
+            protected function redirectWithFlash(
+                ResponseInterface $response,
+                string $url,
+                string $message,
+                string $type = 'info'
+            ): ResponseInterface {
                 // Retourner simplement une réponse mock pour les tests
-                $response = Mockery::mock(ResponseInterface::class);
-                $response->shouldReceive('getStatusCode')->andReturn(302);
-                return $response;
+                $mockResponse = Mockery::mock(ResponseInterface::class);
+                $mockResponse->shouldReceive('getStatusCode')->andReturn(302);
+                return $mockResponse;
             }
         };
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
+
+    /**
+     * Crée une requête HTTP simulée pour les tests
+     *
+     * @return ServerRequestInterface
+     */
+    protected function createMockRequest()
+    {
+        return Mockery::mock(ServerRequestInterface::class)
+            ->shouldReceive('withAttribute')
+            ->andReturnSelf()
+            ->getMock();
     }
 
     public function testProcessWithAuthenticatedUser()
@@ -41,11 +67,11 @@ class AuthMiddlewareTest extends TestCase
 
         $user = Mockery::mock(User::class);
 
-        $this->userProvider->shouldReceive('isLoggedIn')
+        $this->authProvider->shouldReceive('isLoggedIn')
             ->once()
             ->andReturn(true);
 
-        $this->userProvider->shouldReceive('current')
+        $this->authProvider->shouldReceive('getLoggedUser')
             ->once()
             ->andReturn($user);
 
@@ -66,9 +92,39 @@ class AuthMiddlewareTest extends TestCase
         $request = $this->createMockRequest();
         $handler = Mockery::mock(RequestHandlerInterface::class);
 
-        $this->userProvider->shouldReceive('isLoggedIn')
+        $this->authProvider->shouldReceive('isLoggedIn')
             ->once()
             ->andReturn(false);
+
+        // Handler ne devrait pas être appelé
+        $handler->shouldReceive('handle')
+            ->never();
+
+        // Act
+        $result = $this->middleware->process($request, $handler);
+
+        // Assert
+        $this->assertInstanceOf(ResponseInterface::class, $result);
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    public function testProcessWithLoggedInButUserNotFound()
+    {
+        // Arrange
+        $request = $this->createMockRequest();
+        $handler = Mockery::mock(RequestHandlerInterface::class);
+
+        $this->authProvider->shouldReceive('isLoggedIn')
+            ->once()
+            ->andReturn(true);
+
+        $this->authProvider->shouldReceive('getLoggedUser')
+            ->once()
+            ->andReturn(null);
+
+        // Handler ne devrait pas être appelé
+        $handler->shouldReceive('handle')
+            ->never();
 
         // Act
         $result = $this->middleware->process($request, $handler);

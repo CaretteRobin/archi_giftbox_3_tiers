@@ -1,47 +1,57 @@
 <?php
-
 namespace Tests;
 
-use Mockery;
 use PHPUnit\Framework\TestCase as BaseTestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends BaseTestCase
 {
-    protected function tearDown(): void
+    protected function setUp(): void
     {
-        Mockery::close();
-        parent::tearDown();
+        parent::setUp();
     }
 
     /**
-     * Crée un mock de réponse PSR-7
+     * Crée une réponse HTTP simulée avec un stream pour les tests
+     *
+     * @return array [ResponseInterface, StreamInterface]
      */
     protected function createMockResponse()
     {
-        $stream = Mockery::mock('Psr\Http\Message\StreamInterface');
-        $stream->shouldReceive('write')->withAnyArgs()->andReturnSelf();
+        // Créer un mock pour le stream
+        $stream = $this->getMockBuilder(StreamInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $response = Mockery::mock('Psr\Http\Message\ResponseInterface');
-        $response->shouldReceive('getBody')->andReturn($stream);
-        $response->shouldReceive('withHeader')->withAnyArgs()->andReturnSelf();
-        $response->shouldReceive('withStatus')->withAnyArgs()->andReturnSelf();
+        // Créer un mock pour la réponse
+        $response = $this->getMockBuilder(ResponseInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        // Configurer le stream pour capturer le contenu écrit
+        $streamContent = '';
+        $stream->method('write')
+            ->willReturnCallback(function ($content) use (&$streamContent) {
+                $streamContent .= $content;
+                return strlen($content);
+            });
+
+        $stream->method('__toString')
+            ->willReturnCallback(function () use (&$streamContent) {
+                return $streamContent;
+            });
+
+        // Configurer la réponse pour retourner le stream et se retourner elle-même
+        $response->method('getBody')
+            ->willReturn($stream);
+
+        $response->method('withHeader')
+            ->willReturnSelf();
+
+        $response->method('withStatus')
+            ->willReturnSelf();
 
         return [$response, $stream];
-    }
-
-    /**
-     * Crée un mock de requête PSR-7
-     */
-    protected function createMockRequest(array $queryParams = [])
-    {
-        $request = Mockery::mock('Psr\Http\Message\ServerRequestInterface');
-
-        $request->shouldReceive('getQueryParams')
-            ->andReturn($queryParams);
-
-        $request->shouldReceive('withAttribute')
-            ->andReturnSelf();
-
-        return $request;
     }
 }
