@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 use DI\Container;
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthnServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Interfaces\BoxServiceInterface;
 use Gift\Appli\Core\Application\Usecases\Services\AuthnService;
 use Gift\Appli\Core\Application\Usecases\Interfaces\AuthzServiceInterface;
+use Gift\Appli\Core\Application\Usecases\Services\BoxService;
 use Gift\Appli\WebUI\Middlewares\AuthzMiddleware;
 use Gift\Appli\WebUI\Middlewares\CsrfMiddleware;
 use Gift\Appli\WebUI\Middlewares\ErrorHandlerMiddleware;
@@ -42,6 +44,7 @@ $container->set(AuthProviderInterface::class, function (Container $container) {
         $container->get(AuthnServiceInterface::class)
     );
 }, true);
+$container->set(BoxServiceInterface::class, fn () => new BoxService());
 
 
 // --- AJOUT DU SERVICE D'AUTORISATION ---

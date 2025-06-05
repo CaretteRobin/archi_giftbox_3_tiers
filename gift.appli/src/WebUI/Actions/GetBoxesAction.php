@@ -31,6 +31,7 @@ class GetBoxesAction
 
         // Rendu de la vue
         return $this->twig->render($response, 'pages/boxes.twig', [
+            'user' => $user,
             'boxes' => $boxes
         ]);
     }

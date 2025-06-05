@@ -26,8 +26,7 @@ class CreateBoxAction
     // Affiche le formulaire de création
     public function showForm(Request $request, Response $response): Response
     {
-        // générer un token CSRF pour le formulaire
-        $token = CsrfTokenProvider::generate(); // Uncomment if CSRF token generation is implemented
+        $token = CsrfTokenProvider::generate();
         return $this->twig->render($response, 'pages/box-create.twig', [
             'csrf_token' => $token
         ]);
@@ -51,7 +50,8 @@ class CreateBoxAction
             $isGift = isset($data['kdo']) && $data['kdo'] === '1';
             $giftMessage = $data['message_kdo'] ?? null;
 
-            // Créer la box
+//            print_r("Name: $name, Description: $description, Is Gift: $isGift, Gift Message: $giftMessage");
+//            error_log("Name: $name, Description: $description, Is Gift: $isGift, Gift Message: $giftMessage");
             $box = $this->boxService->createBox(
                 $name,
                 $description,
