@@ -3,20 +3,56 @@ declare(strict_types=1);
 
 namespace Gift\Appli\WebUI\Providers;
 
+use Gift\Appli\Core\Application\Usecases\Interfaces\AuthnServiceInterface;
 use Gift\Appli\Core\Domain\Entities\User;
-use Gift\Appli\WebUI\Providers\Interfaces\UserProviderInterface;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 
 /**
- * Gestion centralisée de l’utilisateur connecté.
+ * Gestion centralisée de l'authentification et de l'utilisateur connecté.
  * Aucune autre classe ne doit manipuler directement la session.
  */
-class UserProvider implements UserProviderInterface
+class AuthProvider implements AuthProviderInterface
 {
     /** Clef utilisée dans $_SESSION */
     private const SESSION_KEY = 'user';
 
+    private AuthnServiceInterface $authService;
+
+    public function __construct(AuthnServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
     /**
-     * Enregistre l’utilisateur (sans le mot de passe) dans la session.
+     * Enregistre un nouvel utilisateur et le connecte automatiquement
+     */
+    public function register(string $email, string $password): User
+    {
+        $user = $this->authService->register($email, $password);
+        $this->store($user);
+        return $user;
+    }
+
+    /**
+     * Connecte un utilisateur et le stocke en session
+     */
+    public function login(string $email, string $password): User
+    {
+        $user = $this->authService->login($email, $password);
+        $this->store($user);
+        return $user;
+    }
+
+    /**
+     * Déconnecte l'utilisateur actuel
+     */
+    public function logout(): void
+    {
+        $this->clear();
+    }
+
+    /**
+     * Enregistre l'utilisateur (sans le mot de passe) dans la session.
      */
     public function store(User $user): void
     {
@@ -30,9 +66,9 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * Renvoie l’utilisateur actuellement connecté ou null.
+     * Renvoie l'utilisateur actuellement connecté ou null.
      */
-    public function current(): ?User
+    public function getLoggedUser(): ?User
     {
         $this->startSessionIfNeeded();
 
@@ -48,9 +84,9 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * Supprime l’utilisateur stocké (déconnexion).
+     * Supprime l'utilisateur stocké (déconnexion).
      */
-    public function clear(): void
+    private function clear(): void
     {
         $this->startSessionIfNeeded();
         unset($_SESSION[self::SESSION_KEY]);

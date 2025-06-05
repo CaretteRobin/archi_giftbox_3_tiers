@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace Gift\Appli\WebUI\Actions\Auth;
 
 use Gift\Appli\Core\Application\Exceptions\EntityNotFoundException;
-use Gift\Appli\Core\Application\Usecases\Interfaces\AuthServiceInterface;
 use Gift\Appli\Core\Domain\Traits\FlashRedirectTrait;
-use Gift\Appli\WebUI\Providers\UserProvider;
+use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -14,16 +13,13 @@ class SignInAction
 {
     use FlashRedirectTrait;
 
-    private AuthServiceInterface $authService;
-    private UserProvider $userProvider;
+    private AuthProviderInterface $authProvider;
 
-    public function __construct(
-        AuthServiceInterface $authService,
-        UserProvider $userProvider
-    ) {
-        $this->authService  = $authService;
-        $this->userProvider = $userProvider;
+    public function __construct(AuthProviderInterface $authProvider)
+    {
+        $this->authProvider = $authProvider;
     }
+
 
     public function __invoke(Request $request, Response $response): Response
     {
@@ -42,13 +38,12 @@ class SignInAction
             }
 
             // On récupère directement l'utilisateur complet
-            $user = $this->authService->login($email, $password);
-            $this->userProvider->store($user);
+            $this->authProvider->login($email, $password);
 
             return $this->redirectWithFlash(
                 $response,
                 '/',
-                'Connexion réussieeeeeeeee.',
+                'Connexion réussie.',
                 'success'
             );
 
