@@ -4,6 +4,7 @@ namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Application\Exceptions\BoxException;
 use Gift\Appli\Core\Application\Usecases\Services\BoxService;
+use Gift\Appli\WebUI\Providers\CsrfTokenProvider;
 use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -38,9 +39,11 @@ class GetBoxesByIdAction
             $user = $this->authProvider->getLoggedUser();
             $userId = $user?->id;
             $isOwner = $userId && $boxDetails['createur']['id'] === $userId;
+            $token = CsrfTokenProvider::generate();
 
             // Rendu de la vue
             return $this->twig->render($response, 'pages/box-details.twig', [
+                'csrf_token' => $token,
                 'box' => $boxDetails,
                 'isOwner' => $isOwner
             ]);

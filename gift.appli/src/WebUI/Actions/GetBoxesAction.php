@@ -3,6 +3,7 @@
 namespace Gift\Appli\WebUI\Actions;
 
 use Gift\Appli\Core\Domain\Entities\Box;
+use Gift\Appli\WebUI\Providers\CsrfTokenProvider;
 use Gift\Appli\WebUI\Providers\Interfaces\AuthProviderInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Views\Twig;
